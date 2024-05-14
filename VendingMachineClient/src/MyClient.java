@@ -18,7 +18,12 @@ public class MyClient {
             System.out.println("서버에 연결되었습니다.");
 
             String userInput;
-            while ((userInput = stdIn.readLine()) != null) {
+            while (true) {
+                System.out.print("금액을 입력해주세요.(10, 50, 100, 500, 1000 단위만 가능/ 지폐 입력 상한선 5000, 동전+지폐 7000): ");
+
+                if((userInput = stdIn.readLine()) == null){
+                    break;
+                }
                 // 사용자 입력을 서버로 전송
                 out.println(userInput);
 
