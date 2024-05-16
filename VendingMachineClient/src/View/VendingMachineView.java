@@ -71,7 +71,7 @@ public class VendingMachineView {
 
         waterQuantityLabel = addQuantityLabel();
         coffeeQuantityLabel = addQuantityLabel();
-        sportsDrinkLabel = addQuantityLabel();
+        sportsDrinkQuantityLabel = addQuantityLabel();
         highQualityCoffeeQuantityLabel = addQuantityLabel();
         sodaQuantityLabel = addQuantityLabel();
         specialDrinkQuantityLabel = addQuantityLabel();
@@ -158,7 +158,7 @@ public class VendingMachineView {
     }
 
     private JLabel addQuantityLabel() {
-        JLabel label = new JLabel("10" + "개", SwingConstants.CENTER);
+        JLabel label = new JLabel("10" + " 개", SwingConstants.CENTER);
         Font font = label.getFont();
         label.setFont(font.deriveFont(Font.PLAIN, 20));
         label.setPreferredSize(new Dimension(100, 50));
@@ -167,7 +167,7 @@ public class VendingMachineView {
     }
 
     private JLabel addDrinkLabel(String text) {
-        JLabel label = new JLabel(text+"원", SwingConstants.CENTER);
+        JLabel label = new JLabel(text+" 원", SwingConstants.CENTER);
         Font font = label.getFont();
         label.setFont(font.deriveFont(Font.PLAIN, 20));
         label.setPreferredSize(new Dimension(100, 50));
@@ -177,7 +177,7 @@ public class VendingMachineView {
     }
 
     private void addMoneyButton(String money) {
-        JButton button = new JButton(money + "원");
+        JButton button = new JButton(money + " 원");
         button.setPreferredSize(new Dimension(100, 50));
         button.addActionListener(new ActionListener() {
             @Override
@@ -204,22 +204,22 @@ public class VendingMachineView {
     }
 
     private void payMoneyCheck(int result) {
-        if (result >= 450) {
+        if (result >= 450 && Validation.quantityCheck(waterQuantityLabel.getText())) {
             waterLabel.setForeground(Color.GREEN);
         }
-        if (result >= 500) {
+        if (result >= 500 && Validation.quantityCheck(coffeeQuantityLabel.getText())) {
             coffeeLabel.setForeground(Color.GREEN);
         }
-        if (result >= 550) {
+        if (result >= 550 && Validation.quantityCheck(sportsDrinkQuantityLabel.getText())) {
             sportsDrinkLabel.setForeground(Color.GREEN);
         }
-        if (result >= 700) {
+        if (result >= 700 && Validation.quantityCheck(highQualityCoffeeQuantityLabel.getText())) {
             highQualityCoffeeLabel.setForeground(Color.GREEN);
         }
-        if (result >= 750) {
+        if (result >= 750 && Validation.quantityCheck(sodaQuantityLabel.getText())) {
             sodaLabel.setForeground(Color.GREEN);
         }
-        if (result >= 800) {
+        if (result >= 800 && Validation.quantityCheck(specialDrinkQuantityLabel.getText())) {
             specialDrinkLabel.setForeground(Color.GREEN);
         }
     }

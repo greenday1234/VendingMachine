@@ -14,12 +14,21 @@ public class Validation {
     }
 
 
-    public static boolean overMoney(String payMoney, String money) {
+    public static Boolean overMoney(String payMoney, String money) {
         String[] split = payMoney.split(" ");
         int addMoney = Integer.parseInt(money);
         int result = Integer.parseInt(split[0]);
 
         if (result + addMoney > 7000) {
+            return false;
+        }
+        return true;
+    }
+
+    public static Boolean quantityCheck(String quantity) {
+        String[] split = quantity.split(" ");
+        int result = Integer.parseInt(split[0]);
+        if (result == 0) {
             return false;
         }
         return true;

@@ -27,7 +27,6 @@ public class VendingMachineThread implements Runnable {
 
             while (true) {
                 String clicked = reader.readLine();
-                System.out.println(clicked);
                 switch (clicked) {
                     case "10":
                         vendingMachine.updatePayMoney(0);

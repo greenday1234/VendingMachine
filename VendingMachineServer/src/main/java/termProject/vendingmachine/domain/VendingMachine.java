@@ -73,7 +73,6 @@ public class VendingMachine {
         Integer indexMoney = payMoney.get(index);
         indexMoney++;
         payMoney.set(index, indexMoney);
-        System.out.println(indexMoney);
     }
 
     public String getPayMoneyResult() {
