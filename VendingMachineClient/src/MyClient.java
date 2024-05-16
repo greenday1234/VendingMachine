@@ -1,4 +1,4 @@
-import View.VendingMachine_View;
+import View.VendingMachineView;
 import socket.MySocket;
 import socket.SocketDto;
 
@@ -12,7 +12,7 @@ public class MyClient {
 
         SocketDto socketDto = mySocket.connectSocket();// 소켓 연결
 
-        VendingMachine_View.vendingMachine_View(socketDto);  // 자판기 화면 실행
+        VendingMachineView.vendingMachine_View(socketDto);  // 자판기 화면 실행
 
 
 

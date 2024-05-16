@@ -2,8 +2,12 @@ package message;
 
 public enum MessageTexts {
 
-    NOT_BUY("구매 불가"),
-    POSSIBLE_BUY("구매 가능");
+    WATER("450"),
+    COFFEE("500"),
+    SPORTSDRINK("550"),
+    HIGHQUALITYCOFFEE("700"),
+    SODA("750"),
+    SPECIALDRINK("800");
 
     private String text;
 
