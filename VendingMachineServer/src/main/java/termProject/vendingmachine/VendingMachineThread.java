@@ -1,8 +1,6 @@
 package termProject.vendingmachine;
 
 import termProject.vendingmachine.domain.VendingMachine;
-import termProject.vendingmachine.exception.MoneyException;
-import termProject.vendingmachine.message.ExceptionTexts;
 import termProject.vendingmachine.validate.Validation;
 
 import java.io.BufferedReader;
@@ -23,66 +21,29 @@ public class VendingMachineThread implements Runnable {
         Validation validation = new Validation();
         VendingMachine vendingMachine = new VendingMachine();
 
-        try (BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-             PrintWriter out = new PrintWriter(socket.getOutputStream(), true)) {
+        try {
+            while (true) {
 
-            /**
-             * 테스트 코드!! 추후 프론트로 변경해야 할 부분
-             */
-            String inputLine;
+                BufferedReader reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+                PrintWriter writer = new PrintWriter(socket.getOutputStream(), true);
 
-            while ((inputLine = in.readLine()) != null) {
+                while (true) {
+                    String buttonClicked = reader.readLine(); // 클라이언트로부터 버튼 클릭 이벤트 수신
+                    System.out.println("클라이언트가 " + buttonClicked + " 버튼을 눌렀습니다.");
 
-                validation.moneyValid(inputLine);   // 입력 금액 검증
-                // 클라이언트로부터 받은 요청 처리
-                System.out.println("입력 금액: " + inputLine);
-
-
-                out.println(printDrink(inputLine));
-
-                // 자판기 동작에 따른 응답 전송
-                String response = processRequest(inputLine);
-                out.println(response);
+                    // 클라이언트에게 데이터 전송
+                    writer.println("물");
+                    writer.println("커피");
+                    writer.println("스포츠 음료");
+                    writer.println("고급 커피");
+                    writer.println("소다");
+                    writer.println("특별 음료");
+                    break;
+                }
             }
         } catch (IOException e) {
             e.printStackTrace();
         }
-    }
 
-    private String  printDrink(String inputLine) {
-
-        int money = Integer.parseInt(inputLine);
-
-        if (money >= 450) {
-            if (money >= 500) {
-                if (money >= 550) {
-                    if (money >= 700) {
-                        if (money >= 750) {
-                            if (money >= 800) {
-                                return "물, 커피, 이온음료, 고급커피, 탄산음료, 특화음료 구매 가능";
-                            }
-                            return "물, 커피, 이온음료, 고급커피, 탄산음료 구매 가능";
-                        }
-                        return "물, 커피, 이온음료, 고급커피 구매 가능";
-                    }
-                    return "물, 커피, 이온음료 구매 가능";
-                }
-                return "물, 커피 구매 가능";
-            }
-            return "물 구매 가능";
-        } else {
-            return "구매 가능한 음료가 없습니다.";
-        }
-    }
-
-    private String processRequest(String request) {
-        // 요청에 따른 작업 처리
-        // 예: "Coke"를 요청받으면 재고 확인 후 응답
-        if (request.equals("Coke")) {
-            // 자판기의 재고 확인 로직
-            return "Coke을 제공합니다.";
-        } else {
-            return "지원하지 않는 상품입니다.";
-        }
     }
 }
