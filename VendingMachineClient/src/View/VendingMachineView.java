@@ -23,9 +23,7 @@ public class VendingMachineView {
     private JLabel sodaLabel;
     private JLabel specialDrinkLabel;
 
-    private static JFrame vendingMachineFrame;
-    private static TextField IDField;
-    private static JPasswordField passwordField;
+    public static JFrame vendingMachineFrame;
 
     public VendingMachineView(SocketDto socketDto) {
 
@@ -60,40 +58,9 @@ public class VendingMachineView {
         addMoneyButton("500");
         addMoneyButton("1000");
 
-        addAdminButton();
+        addAdminButton(socketDto);
 
         vendingMachineFrame.setVisible(true);
-
-
-        /*IDField = new TextField("");
-        //IDField.setBounds(530,400,190,40);
-        IDField.setFont(new Font("굴림", Font.BOLD, 20));
-        vendingMachineFrame.getContentPane().add(IDField);
-        IDField.setColumns(10);
-
-        ImageIcon PassIcon = new ImageIcon("image/password.png");
-        JLabel PWlabel = new JLabel(PassIcon,SwingConstants.RIGHT);
-        //PWlabel.setBounds(400,460,115,40);
-        vendingMachineFrame.getContentPane().add(PWlabel);
-
-        passwordField = new JPasswordField(0);
-        //PasswordField.setBounds(530,460,190,40);
-        passwordField.setFont(new Font("굴림", Font.BOLD, 20));
-        vendingMachineFrame.getContentPane().add(passwordField);
-        passwordField.setColumns(10);*/
-
-
-        /*waterBtn.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                if(IDField.getText().equals("test") && passwordField.getText().equals("1234")) {
-                    vendingMachineFrame.setVisible(false);
-                    //Select_View.Select_View();
-                }
-                else {
-                    JOptionPane.showMessageDialog(vendingMachineFrame,"ID, 비밀번호를 다시 입력해주세요.");
-                }
-            }
-        });*/
     }
 
     private void addDrinkButton(String text) {
@@ -163,7 +130,7 @@ public class VendingMachineView {
         vendingMachineFrame.getContentPane().add(button);
     }
 
-    private void addAdminButton() {
+    private void addAdminButton(SocketDto socketDto) {
         JButton button = new JButton("관리자 메뉴");
         button.setPreferredSize(new Dimension(100, 50));
         button.addActionListener(new ActionListener() {
@@ -172,13 +139,15 @@ public class VendingMachineView {
                 /**
                  * 이 부분에 비밀번호를 입력할 수 있는 페이지로 넘어가는 로직 작성해야 함!!
                  */
+                //vendingMachineFrame.setVisible(false);
+                AdminLoginView.adminLoginView(socketDto);
 
             }
         });
         vendingMachineFrame.getContentPane().add(button);
     }
 
-    public static void vendingMachine_View(SocketDto socketDto) throws IOException {
+    public static void vendingMachineView(SocketDto socketDto) {
         new VendingMachineView(socketDto);
     }
 }
