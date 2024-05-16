@@ -10,7 +10,6 @@ import java.net.Socket;
 @Slf4j
 public class SocketService {
 
-
     public void connectionSocket() {
 
 		final int PORT = 8000;

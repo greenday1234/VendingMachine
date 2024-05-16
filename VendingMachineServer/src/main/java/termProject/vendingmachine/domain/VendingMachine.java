@@ -1,13 +1,17 @@
 package termProject.vendingmachine.domain;
 
+import lombok.Getter;
 import termProject.vendingmachine.domain.drink.*;
+import termProject.vendingmachine.util.Calculator;
 
 import java.util.ArrayList;
 import java.util.List;
 
+@Getter
 public class VendingMachine {
 
     private List<Integer> money;
+    private List<Integer> payMoney;
 
     private Water water;
     private Coffee coffee;
@@ -30,6 +34,16 @@ public class VendingMachine {
         quantityInit();
         money = new ArrayList<>();
         moneyInit();
+        payMoney = new ArrayList<>();
+        payMoneyInit();
+    }
+
+    private void payMoneyInit() {
+        payMoney.add(0);
+        payMoney.add(0);
+        payMoney.add(0);
+        payMoney.add(0);
+        payMoney.add(0);
     }
 
     /**
@@ -53,5 +67,16 @@ public class VendingMachine {
         quantityList.add(soda.getQuantity());
         quantityList.add(highQualityCoffee.getQuantity());
         quantityList.add(specialDrink.getQuantity());
+    }
+
+    public void updatePayMoney(int index) {
+        Integer indexMoney = payMoney.get(index);
+        indexMoney++;
+        payMoney.set(index, indexMoney);
+        System.out.println(indexMoney);
+    }
+
+    public String getPayMoneyResult() {
+        return Calculator.payMoneyCal(getPayMoney());
     }
 }

@@ -2,19 +2,26 @@ package View;
 
 import message.MessageTexts;
 import socket.SocketDto;
+import validate.Validation;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.PrintWriter;
+import java.io.*;
+import java.net.Socket;
+import java.util.ArrayList;
+import java.util.List;
 
 public class VendingMachineView {
 
     private BufferedReader reader;
     private PrintWriter writer;
+    private ObjectInputStream in;
+    private ObjectOutputStream out;
+    private Socket socket;
+
+    private List<Integer> payMoney;
 
     private JLabel waterLabel;
     private JLabel coffeeLabel;
@@ -23,16 +30,33 @@ public class VendingMachineView {
     private JLabel sodaLabel;
     private JLabel specialDrinkLabel;
 
+    private JLabel waterQuantityLabel;
+    private JLabel coffeeQuantityLabel;
+    private JLabel sportsDrinkQuantityLabel;
+    private JLabel highQualityCoffeeQuantityLabel;
+    private JLabel sodaQuantityLabel;
+    private JLabel specialDrinkQuantityLabel;
+    private JLabel payMoneyLabel;
+
     public static JFrame vendingMachineFrame;
 
     public VendingMachineView(SocketDto socketDto) {
 
+        socket = socketDto.getSocket();
+
         reader = socketDto.getReader();
         writer = socketDto.getWriter();
 
+        in = socketDto.getIn();
+        out = socketDto.getOut();
+
+        payMoney = new ArrayList<>();
+
+        payMoneyInit();
+
         // 프레임
         vendingMachineFrame = new JFrame("자판기 프로그램");
-        vendingMachineFrame.setBounds(560,200,790,300);
+        vendingMachineFrame.setBounds(560,200,790,400);
         vendingMachineFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         vendingMachineFrame.getContentPane().setLayout(new FlowLayout(FlowLayout.CENTER, 30, 10));
         vendingMachineFrame.getContentPane().setBackground(new Color(151, 100, 100));
@@ -44,6 +68,13 @@ public class VendingMachineView {
         addDrinkButton("highQualityCoffee");
         addDrinkButton("soda");
         addDrinkButton("specialDrink");
+
+        waterQuantityLabel = addQuantityLabel();
+        coffeeQuantityLabel = addQuantityLabel();
+        sportsDrinkLabel = addQuantityLabel();
+        highQualityCoffeeQuantityLabel = addQuantityLabel();
+        sodaQuantityLabel = addQuantityLabel();
+        specialDrinkQuantityLabel = addQuantityLabel();
 
         waterLabel = addDrinkLabel(MessageTexts.WATER.getText());
         coffeeLabel = addDrinkLabel(MessageTexts.COFFEE.getText());
@@ -58,9 +89,19 @@ public class VendingMachineView {
         addMoneyButton("500");
         addMoneyButton("1000");
 
+        payMoneyLabel = addMoneyLabel();
+
         addAdminButton(socketDto);
 
         vendingMachineFrame.setVisible(true);
+    }
+
+    private void payMoneyInit() {
+        payMoney.add(0);
+        payMoney.add(0);
+        payMoney.add(0);
+        payMoney.add(0);
+        payMoney.add(0);
     }
 
     private void addDrinkButton(String text) {
@@ -79,31 +120,54 @@ public class VendingMachineView {
         vendingMachineFrame.getContentPane().add(button);
     }
 
-    private void updateUI() {
-        try {
-            // 서버로부터 데이터 수신
-            String waterText = reader.readLine();
-            String coffeeText = reader.readLine();
-            String sportsDrinkText = reader.readLine();
-            String highQualityCoffeeText = reader.readLine();
-            String sodaText = reader.readLine();
-            String specialDrinkText = reader.readLine();
+    private int updateMoney(String money) throws IOException {
+        addPayMoney(money);
+        String payMoneyResult = reader.readLine();
+        payMoneyLabel.setText(payMoneyResult + " 원");
+        return Integer.parseInt(payMoneyResult);
+    }
 
-            // UI 업데이트
-            waterLabel.setForeground(Color.GREEN);
-            coffeeLabel.setForeground(Color.GREEN);
-            sportsDrinkLabel.setForeground(Color.GREEN);
-            highQualityCoffeeLabel.setForeground(Color.GREEN);
-            sodaLabel.setForeground(Color.GREEN);
-            specialDrinkLabel.setForeground(Color.GREEN);
-
-        } catch (IOException e) {
-            e.printStackTrace();
+    private void addPayMoney(String money) {
+        switch (money) {
+            case "10":
+                Integer ten = payMoney.get(0);
+                ten++;
+                payMoney.set(0, ten);
+                break;
+            case "50":
+                Integer fif = payMoney.get(1);
+                fif++;
+                payMoney.set(1, fif);
+                break;
+            case "100":
+                Integer hun = payMoney.get(2);
+                hun++;
+                payMoney.set(2, hun);
+                break;
+            case "500":
+                Integer fivehun = payMoney.get(3);
+                fivehun++;
+                payMoney.set(3, fivehun);
+                break;
+            case "1000":
+                Integer thuo = payMoney.get(4);
+                thuo++;
+                payMoney.set(4, thuo);
+                break;
         }
     }
 
+    private JLabel addQuantityLabel() {
+        JLabel label = new JLabel("10" + "개", SwingConstants.CENTER);
+        Font font = label.getFont();
+        label.setFont(font.deriveFont(Font.PLAIN, 20));
+        label.setPreferredSize(new Dimension(100, 50));
+        vendingMachineFrame.getContentPane().add(label);
+        return label;
+    }
+
     private JLabel addDrinkLabel(String text) {
-        JLabel label = new JLabel(text, SwingConstants.CENTER);
+        JLabel label = new JLabel(text+"원", SwingConstants.CENTER);
         Font font = label.getFont();
         label.setFont(font.deriveFont(Font.PLAIN, 20));
         label.setPreferredSize(new Dimension(100, 50));
@@ -113,21 +177,60 @@ public class VendingMachineView {
     }
 
     private void addMoneyButton(String money) {
-        JButton button = new JButton(money+"원");
+        JButton button = new JButton(money + "원");
         button.setPreferredSize(new Dimension(100, 50));
         button.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                /**
-                 * 이 부분에 전체 금액이 7000원을 넘는지 검증하고, 7000원 넘으면 팝업 띄워야 함!!
-                 * 음료 구매 가능 시 글자 색 변경해야함!!
-                 */
+                if (!Validation.billValid(payMoney, money)) {    // 지폐가 5000원을 초과하는지 검증
+                    JOptionPane.showMessageDialog(vendingMachineFrame, MessageTexts.OVER_5000.getText());
+                    return;
+                }
+                if (!Validation.overMoney(payMoneyLabel.getText(), money)) {  // 전체 금액이 7000원을 초과하는지 검증
+                    JOptionPane.showMessageDialog(vendingMachineFrame, MessageTexts.OVER_7000.getText());
+                    return;
+                }
 
-                writer.println(money); // 버튼에 대한 메시지를 서버로 전송
-                updateUI();
+                writer.println(money); // 넣은 금액을 서버에 전송
+                try {
+                    int result = updateMoney(money);// 넣은 금액 변환
+                    payMoneyCheck(result);  // 구매 가능 음료 글자 색 변환
+                } catch (IOException ex) {
+                    throw new RuntimeException(ex); // Exception 만들어야 함!!
+                }
             }
         });
         vendingMachineFrame.getContentPane().add(button);
+    }
+
+    private void payMoneyCheck(int result) {
+        if (result >= 450) {
+            waterLabel.setForeground(Color.GREEN);
+        }
+        if (result >= 500) {
+            coffeeLabel.setForeground(Color.GREEN);
+        }
+        if (result >= 550) {
+            sportsDrinkLabel.setForeground(Color.GREEN);
+        }
+        if (result >= 700) {
+            highQualityCoffeeLabel.setForeground(Color.GREEN);
+        }
+        if (result >= 750) {
+            sodaLabel.setForeground(Color.GREEN);
+        }
+        if (result >= 800) {
+            specialDrinkLabel.setForeground(Color.GREEN);
+        }
+    }
+
+    private JLabel addMoneyLabel() {
+        JLabel label = new JLabel("0 원", SwingConstants.CENTER);
+        Font font = label.getFont();
+        label.setFont(font.deriveFont(Font.PLAIN, 20));
+        label.setPreferredSize(new Dimension(100, 50));
+        vendingMachineFrame.getContentPane().add(label);
+        return label;
     }
 
     private void addAdminButton(SocketDto socketDto) {
@@ -136,10 +239,6 @@ public class VendingMachineView {
         button.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                /**
-                 * 이 부분에 비밀번호를 입력할 수 있는 페이지로 넘어가는 로직 작성해야 함!!
-                 */
-                //vendingMachineFrame.setVisible(false);
                 AdminLoginView.adminLoginView(socketDto);
 
             }
