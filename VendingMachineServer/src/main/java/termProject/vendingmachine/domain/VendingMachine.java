@@ -10,9 +10,11 @@ import java.util.List;
 @Getter
 public class VendingMachine {
 
-    private List<Integer> changeMoney;
-    private List<Integer> payMoney;
-    private List<Integer> quantityList;
+    public static final List<Integer> COIN_VALUES = new ArrayList<>(List.of(10, 50, 100, 500, 1000));
+
+    public static List<Integer> changeMoney;
+    public static List<Integer> payMoney;
+    public static List<Integer> quantityList;
 
     private Water water;
     private Coffee coffee;
@@ -75,7 +77,7 @@ public class VendingMachine {
     }
 
     public int getPayMoneyResult() {
-        return Calculator.payMoneyCal(getPayMoney());
+        return Calculator.payMoneyCal();
     }
 
     public void updateQuantityList(int index) {

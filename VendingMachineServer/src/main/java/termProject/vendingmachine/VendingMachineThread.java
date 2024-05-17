@@ -2,11 +2,12 @@ package termProject.vendingmachine;
 
 import termProject.vendingmachine.domain.VendingMachine;
 import termProject.vendingmachine.util.Calculator;
-import termProject.vendingmachine.validate.Validation;
 
 import java.io.*;
 import java.net.Socket;
 import java.util.List;
+
+import static termProject.vendingmachine.domain.VendingMachine.*;
 
 public class VendingMachineThread implements Runnable {
 
@@ -20,17 +21,15 @@ public class VendingMachineThread implements Runnable {
     }
 
     public void run() {
-
-        Validation validation = new Validation();
         vendingMachine = new VendingMachine();
 
         try {
             reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
             writer = new PrintWriter(socket.getOutputStream(), true);
 
-            writePayMoney(vendingMachine, writer);  // 초기 입력 금액 반환
-            writeQuantityList(vendingMachine, writer);  // 초기 재고 수량 반환
-            writeChangeMoney(vendingMachine, writer);   // 초기 거스름돈 수량 반환
+            writePayMoney(writer);  // 초기 입력 금액 반환
+            writeQuantityList(writer);  // 초기 재고 수량 반환
+            writeChangeMoney(writer);   // 초기 거스름돈 수량 반환
 
             while (true) {
                 String clicked = reader.readLine();
@@ -43,7 +42,7 @@ public class VendingMachineThread implements Runnable {
                             writeQuantityList();    // 재고 수량 반환
 
                             // 거스름돈 계산
-
+                            Calculator.ChangePayMoneyCal(vendingMachine.getWater().getPrice());
                             // 거스름돈 수량 변경
 
                             // 거스름돈 수량 반환
@@ -101,35 +100,30 @@ public class VendingMachineThread implements Runnable {
     }
 
     private void writeQuantityList() {
-        List<Integer> quantityList = vendingMachine.getQuantityList();
         for (Integer integer : quantityList) {
             writer.println(integer);
         }
     }
 
-    private void writeChangeMoney(VendingMachine vendingMachine, PrintWriter writer) {
-        List<Integer> changeMoney = vendingMachine.getChangeMoney();
+    private void writeChangeMoney(PrintWriter writer) {
         for (Integer integer : changeMoney) {
             writer.println(integer);
         }
     }
 
     private void writePayMoneyList() {
-        List<Integer> payMoney = vendingMachine.getPayMoney();
         for (Integer integer : payMoney) {
             writer.println(integer);
         }
     }
 
-    private static void writeQuantityList(VendingMachine vendingMachine, PrintWriter writer) {
-        List<Integer> quantityList = vendingMachine.getQuantityList();
+    private static void writeQuantityList(PrintWriter writer) {
         for (Integer integer : quantityList) {
             writer.println(integer);
         }
     }
 
-    private static void writePayMoney(VendingMachine vendingMachine, PrintWriter writer) {
-        List<Integer> payMoney = vendingMachine.getPayMoney();
+    private static void writePayMoney(PrintWriter writer) {
         for (Integer integer : payMoney) {
             writer.println(integer);
         }
