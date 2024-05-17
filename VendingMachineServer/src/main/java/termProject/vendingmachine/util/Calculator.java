@@ -4,7 +4,7 @@ import java.util.List;
 
 public class Calculator {
 
-    public static String payMoneyCal(List<Integer> payMoney) {
+    public static int payMoneyCal(List<Integer> payMoney) {
         int ten = payMoney.get(0) * 10;
         int fif = payMoney.get(1) * 50;
         int hun = payMoney.get(2) * 100;
@@ -13,6 +13,10 @@ public class Calculator {
 
         int result = ten + fif + hun + fivehun + thou;
 
-        return Integer.toString(result);
+        return result;
+    }
+
+    public static int ChangePayMoneyCal() {
+
     }
 }

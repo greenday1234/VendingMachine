@@ -13,7 +13,7 @@ public class HighQualityCoffee {
         this.quantity = 10;
     }
 
-    public void sellHighQualityCoffee(int quantity) {
-        this.quantity -= quantity;
+    public void sellHighQualityCoffee() {
+        this.quantity--;
     }
 }

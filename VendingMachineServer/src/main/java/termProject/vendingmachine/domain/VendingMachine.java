@@ -10,8 +10,9 @@ import java.util.List;
 @Getter
 public class VendingMachine {
 
-    private List<Integer> money;
+    private List<Integer> changeMoney;
     private List<Integer> payMoney;
+    private List<Integer> quantityList;
 
     private Water water;
     private Coffee coffee;
@@ -19,8 +20,6 @@ public class VendingMachine {
     private Soda soda;
     private HighQualityCoffee highQualityCoffee;
     private SpecialDrink specialDrink;
-
-    private List<Integer> quantityList;
 
     public VendingMachine() {
         water = new Water();
@@ -32,8 +31,8 @@ public class VendingMachine {
 
         quantityList = new ArrayList<>();
         quantityInit();
-        money = new ArrayList<>();
-        moneyInit();
+        changeMoney = new ArrayList<>();
+        changeMoneyInit();
         payMoney = new ArrayList<>();
         payMoneyInit();
     }
@@ -49,12 +48,12 @@ public class VendingMachine {
     /**
      * 각 동전 및 지폐의 거스름돈 수량 초기화 (10, 50, 100, 500, 1000)
      */
-    private void moneyInit() {
-        money.add(10);
-        money.add(10);
-        money.add(10);
-        money.add(10);
-        money.add(10);
+    private void changeMoneyInit() {
+        changeMoney.add(10);
+        changeMoney.add(10);
+        changeMoney.add(10);
+        changeMoney.add(10);
+        changeMoney.add(10);
     }
 
     /**
@@ -75,7 +74,11 @@ public class VendingMachine {
         payMoney.set(index, indexMoney);
     }
 
-    public String getPayMoneyResult() {
+    public int getPayMoneyResult() {
         return Calculator.payMoneyCal(getPayMoney());
+    }
+
+    public void updateQuantityList(int index) {
+        quantityList.set(index, water.getQuantity());
     }
 }
