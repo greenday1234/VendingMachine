@@ -15,10 +15,7 @@ public class MySocket {
             BufferedReader reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
             PrintWriter writer = new PrintWriter(socket.getOutputStream(), true);
 
-            ObjectOutputStream out = new ObjectOutputStream(socket.getOutputStream());
-            ObjectInputStream in = new ObjectInputStream(socket.getInputStream());
-
-            return new SocketDto(reader, writer, in, out, socket);
+            return new SocketDto(reader, writer, socket);
         } catch (
                 IOException e) {
             e.printStackTrace();

@@ -15,44 +15,46 @@ import java.util.List;
 
 public class VendingMachineView {
 
-    private BufferedReader reader;
-    private PrintWriter writer;
-    private ObjectInputStream in;
-    private ObjectOutputStream out;
-    private Socket socket;
+    private final BufferedReader reader;
+    private final PrintWriter writer;
+    private final Socket socket;
 
-    private List<Integer> payMoney;
+    private int allPayMoney = 0;
+    private final List<Integer> payMoney; // 입력 금액
+    private final List<Integer> quantityList; // 재고 수량
+    private final List<Integer> changeMoney;    // 거스름돈 수량
 
-    private JLabel waterLabel;
-    private JLabel coffeeLabel;
-    private JLabel sportsDrinkLabel;
-    private JLabel highQualityCoffeeLabel;
-    private JLabel sodaLabel;
-    private JLabel specialDrinkLabel;
+    private final JLabel waterLabel;
+    private final JLabel coffeeLabel;
+    private final JLabel sportsDrinkLabel;
+    private final JLabel highQualityCoffeeLabel;
+    private final JLabel sodaLabel;
+    private final JLabel specialDrinkLabel;
 
-    private JLabel waterQuantityLabel;
-    private JLabel coffeeQuantityLabel;
-    private JLabel sportsDrinkQuantityLabel;
-    private JLabel highQualityCoffeeQuantityLabel;
-    private JLabel sodaQuantityLabel;
-    private JLabel specialDrinkQuantityLabel;
-    private JLabel payMoneyLabel;
+    private final JLabel waterQuantityLabel;
+    private final JLabel coffeeQuantityLabel;
+    private final JLabel sportsDrinkQuantityLabel;
+    private final JLabel highQualityCoffeeQuantityLabel;
+    private final JLabel sodaQuantityLabel;
+    private final JLabel specialDrinkQuantityLabel;
+    private final JLabel payMoneyLabel;
 
     public static JFrame vendingMachineFrame;
 
-    public VendingMachineView(SocketDto socketDto) {
+    public VendingMachineView(SocketDto socketDto) throws IOException {
 
         socket = socketDto.getSocket();
 
         reader = socketDto.getReader();
         writer = socketDto.getWriter();
 
-        in = socketDto.getIn();
-        out = socketDto.getOut();
-
         payMoney = new ArrayList<>();
+        quantityList = new ArrayList<>();
+        changeMoney = new ArrayList<>();
 
-        payMoneyInit();
+        payMoneyInit(); // 입력 금액 초기화
+        quantityListInit(); // 재고 수량 초기화
+        changeMoneyInit();  // 거스름돈 수량 초기화
 
         // 프레임
         vendingMachineFrame = new JFrame("자판기 프로그램");
@@ -96,12 +98,25 @@ public class VendingMachineView {
         vendingMachineFrame.setVisible(true);
     }
 
-    private void payMoneyInit() {
-        payMoney.add(0);
-        payMoney.add(0);
-        payMoney.add(0);
-        payMoney.add(0);
-        payMoney.add(0);
+    private void changeMoneyInit() throws IOException {
+        for (int i = 0; i < 5; i++) {
+            String str = reader.readLine();
+            changeMoney.add(Integer.parseInt(str));
+        }
+    }
+
+    private void payMoneyInit() throws IOException {
+        for (int i = 0; i < 5; i++) {
+            String str = reader.readLine();
+            payMoney.add(Integer.parseInt(str));
+        }
+    }
+
+    private void quantityListInit() throws IOException {
+        for (int i = 0; i < 6; i++) {
+            String str = reader.readLine();
+            quantityList.add(Integer.parseInt(str));
+        }
     }
 
     private void addDrinkButton(String text) {
@@ -113,11 +128,55 @@ public class VendingMachineView {
             public void actionPerformed(ActionEvent e) {
                 /**
                  * 이 부분에 구매 가능한지 검증하는 로직 추가해야함!!(금액, 남은 재고 등)
+                 * 거스름돈 계산도 가능한지 확인해야함!!
                  */
+
+
+
+                writer.println("drink " + text);   // 서버에 전송
+                checkTextLabel(text);
+
+
 
             }
         });
         vendingMachineFrame.getContentPane().add(button);
+    }
+
+    private void checkTextLabel(String text) {
+        switch (text) {
+            case "water":
+                Integer water = quantityList.get(0);
+                quantityList.set(0, --water);
+                waterQuantityLabel.setText(Integer.toString(quantityList.get(0)));
+                break;
+            case "coffee":
+                Integer coffee = quantityList.get(1);
+                quantityList.set(1, --coffee);
+                coffeeQuantityLabel.setText(Integer.toString(quantityList.get(1)));
+                break;
+            case "sportsDrink":
+                Integer sportsDrink = quantityList.get(2);
+                quantityList.set(2, --sportsDrink);
+                sportsDrinkQuantityLabel.setText(Integer.toString(quantityList.get(2)));
+                break;
+            case "highQualityCoffee":
+                Integer highQualityCoffee = quantityList.get(3);
+                quantityList.set(3, --highQualityCoffee);
+                highQualityCoffeeQuantityLabel.setText(Integer.toString(quantityList.get(3)));
+                break;
+            case "soda":
+                Integer soda = quantityList.get(4);
+                quantityList.set(4, --soda);
+                sodaQuantityLabel.setText(Integer.toString(quantityList.get(4)));
+                break;
+            case "specialDrink":
+                Integer specialDrink = quantityList.get(5);
+                quantityList.set(5, --specialDrink);
+                specialDrinkQuantityLabel.setText(Integer.toString(quantityList.get(5)));
+                break;
+
+        }
     }
 
     private int updateMoney(String money) throws IOException {
@@ -191,16 +250,25 @@ public class VendingMachineView {
                     return;
                 }
 
-                writer.println(money); // 넣은 금액을 서버에 전송
+                writer.println("money " + money); // 넣은 금액을 서버에 전송
                 try {
-                    int result = updateMoney(money);// 넣은 금액 변환
-                    payMoneyCheck(result);  // 구매 가능 음료 글자 색 변환
+                    allPayMoney = updateMoney(money);// 넣은 금액 변환
+                    updatePayMoney();   // PayMoney 리스트 업데이트
+                    payMoneyCheck(allPayMoney);  // 구매 가능 음료 글자 색 변환
                 } catch (IOException ex) {
                     throw new RuntimeException(ex); // Exception 만들어야 함!!
                 }
             }
         });
         vendingMachineFrame.getContentPane().add(button);
+    }
+
+    private void updatePayMoney() throws IOException {
+        payMoney.clear();
+        for (int i = 0; i < 5; i++) {
+            String str = reader.readLine();
+            payMoney.add(Integer.parseInt(str));
+        }
     }
 
     private void payMoneyCheck(int result) {
@@ -246,7 +314,7 @@ public class VendingMachineView {
         vendingMachineFrame.getContentPane().add(button);
     }
 
-    public static void vendingMachineView(SocketDto socketDto) {
+    public static void vendingMachineView(SocketDto socketDto) throws IOException {
         new VendingMachineView(socketDto);
     }
 }
