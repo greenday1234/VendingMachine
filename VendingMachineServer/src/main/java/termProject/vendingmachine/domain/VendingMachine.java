@@ -2,7 +2,6 @@ package termProject.vendingmachine.domain;
 
 import lombok.Getter;
 import termProject.vendingmachine.domain.drink.*;
-import termProject.vendingmachine.util.Calculator;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -73,17 +72,7 @@ public class VendingMachine {
         quantityList.add(specialDrink.getQuantity());
     }
 
-    public void updatePayMoney(int index) {
-        Integer indexMoney = payMoney.get(index);
-        indexMoney++;
-        payMoney.set(index, indexMoney);
-    }
-
-    public int getPayMoneyResult() {
-        return Calculator.payMoneyCal();
-    }
-
-    public void updateQuantityList(int index) {
-        quantityList.set(index, water.getQuantity());
+    public void updateChangeMoney(int index) {
+        changeMoney.set(index, changeMoney.get(index) + 1);
     }
 }

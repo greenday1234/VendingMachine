@@ -26,7 +26,6 @@ public class VendingMachineThread implements Runnable {
             reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
             writer = new PrintWriter(socket.getOutputStream(), true);
 
-            writePayMoney(writer);  // 초기 입력 금액 반환
             writeQuantityList(writer);  // 초기 재고 수량 반환
             writeChangeMoney(writer);   // 초기 거스름돈 수량 반환
 
@@ -37,85 +36,102 @@ public class VendingMachineThread implements Runnable {
                     switch (split[1]) {
                         case "water":
                             vendingMachine.getWater().sellWater();  // 재고 수량 변경
-                            vendingMachine.updateQuantityList(0);
+                            quantityList.set(0, vendingMachine.getWater().getQuantity());
                             writeQuantityList();    // 재고 수량 반환
-                            writer.println(Calculator.payMoneyCal() - vendingMachine.getWater().getPrice());    // 입력 금액 변경 및 반환
-                            Calculator.ChangePayMoneyCal(vendingMachine.getWater().getPrice());   // 거스름돈에 입금 금액 추가
+                            remainMoney -= vendingMachine.getWater().getPrice();
+                            writer.println(remainMoney);    // 입력 금액 변경 및 반환
                             break;
                         case "coffee":
                             vendingMachine.getCoffee().sellCoffee();  // 재고 수량 변경
-                            vendingMachine.updateQuantityList(1);
+                            quantityList.set(1, vendingMachine.getCoffee().getQuantity());
                             writeQuantityList();    // 재고 수량 반환
-                            writer.println(Calculator.payMoneyCal() - vendingMachine.getCoffee().getPrice());    // 입력 금액 변경 및 반환
-                            Calculator.ChangePayMoneyCal(vendingMachine.getCoffee().getPrice());   // 거스름돈에 입금 금액 추가
+                            remainMoney -= vendingMachine.getCoffee().getPrice();
+                            writer.println(remainMoney);    // 입력 금액 변경 및 반환
                             break;
                         case "sportsDrink":
                             vendingMachine.getSportsDrink().sellSportsDrink();  // 재고 수량 변경
-                            vendingMachine.updateQuantityList(2);
+                            quantityList.set(2, vendingMachine.getSportsDrink().getQuantity());
                             writeQuantityList();    // 재고 수량 반환
-                            writer.println(Calculator.payMoneyCal() - vendingMachine.getSportsDrink().getPrice());    // 입력 금액 변경 및 반환
-                            Calculator.ChangePayMoneyCal(vendingMachine.getSportsDrink().getPrice());   // 거스름돈에 입금 금액 추가
+                            remainMoney -= vendingMachine.getSportsDrink().getPrice();
+                            writer.println(remainMoney);    // 입력 금액 변경 및 반환
                             break;
                         case "highQualityCoffee":
                             vendingMachine.getHighQualityCoffee().sellHighQualityCoffee();  // 재고 수량 변경
-                            vendingMachine.updateQuantityList(3);
+                            quantityList.set(3, vendingMachine.getHighQualityCoffee().getQuantity());
                             writeQuantityList();    // 재고 수량 반환
-                            writer.println(Calculator.payMoneyCal() - vendingMachine.getHighQualityCoffee().getPrice());    // 입력 금액 변경 및 반환
-                            Calculator.ChangePayMoneyCal(vendingMachine.getHighQualityCoffee().getPrice());   // 거스름돈에 입금 금액 추가
+                            remainMoney -= vendingMachine.getHighQualityCoffee().getPrice();
+                            writer.println(remainMoney);    // 입력 금액 변경 및 반환
                             break;
                         case "soda":
                             vendingMachine.getSoda().sellSoda();  // 재고 수량 변경
-                            vendingMachine.updateQuantityList(4);
+                            quantityList.set(4, vendingMachine.getSoda().getQuantity());
                             writeQuantityList();    // 재고 수량 반환
-                            writer.println(Calculator.payMoneyCal() - vendingMachine.getSoda().getPrice());    // 입력 금액 변경 및 반환
-                            Calculator.ChangePayMoneyCal(vendingMachine.getSoda().getPrice());   // 거스름돈에 입금 금액 추가
+                            remainMoney -= vendingMachine.getSoda().getPrice();
+                            writer.println(remainMoney);    // 입력 금액 변경 및 반환
                             break;
                         case "specialDrink":
                             vendingMachine.getSpecialDrink().sellSpecialDrink();  // 재고 수량 변경
-                            vendingMachine.updateQuantityList(5);
+                            quantityList.set(5, vendingMachine.getSpecialDrink().getQuantity());
                             writeQuantityList();    // 재고 수량 반환
-                            writer.println(Calculator.payMoneyCal() - vendingMachine.getSpecialDrink().getPrice());    // 입력 금액 변경 및 반환
-                            Calculator.ChangePayMoneyCal(vendingMachine.getSpecialDrink().getPrice());   // 거스름돈에 입금 금액 추가
+                            remainMoney -= vendingMachine.getSpecialDrink().getPrice();
+                            writer.println(remainMoney);    // 입력 금액 변경 및 반환
                             break;
                     }
                 } else if (split[0].equals("money")){    // 화폐 입금
                     switch (split[1]) {
                         case "10":
-                            vendingMachine.updatePayMoney(0);
-                            writer.println(vendingMachine.getPayMoneyResult()); // 총 금액 전송
-                            writePayMoneyList();    // 입력 금액 리스트 전송
+                            vendingMachine.updateChangeMoney(0);
+                            remainMoney += 10;
+                            writer.println(remainMoney);   // 총 금액 전송
                             break;
                         case "50":
-                            vendingMachine.updatePayMoney(1);
-                            writer.println(vendingMachine.getPayMoneyResult()); // 총 금액 전송
-                            writePayMoneyList();    // 입력 금액 리스트 전송
+                            vendingMachine.updateChangeMoney(1);
+                            remainMoney += 50;
+                            writer.println(remainMoney);   // 총 금액 전송
                             break;
                         case "100":
-                            vendingMachine.updatePayMoney(2);
-                            writer.println(vendingMachine.getPayMoneyResult()); // 총 금액 전송
-                            writePayMoneyList();    // 입력 금액 리스트 전송
+                            vendingMachine.updateChangeMoney(2);
+                            remainMoney += 100;
+                            writer.println(remainMoney);   // 총 금액 전송
                             break;
                         case "500":
-                            vendingMachine.updatePayMoney(3);
-                            writer.println(vendingMachine.getPayMoneyResult()); // 총 금액 전송
-                            writePayMoneyList();    // 입력 금액 리스트 전송
+                            vendingMachine.updateChangeMoney(3);
+                            remainMoney += 500;
+                            writer.println(remainMoney);   // 총 금액 전송
                             break;
                         case "1000":
-                            vendingMachine.updatePayMoney(4);
-                            writer.println(vendingMachine.getPayMoneyResult()); // 총 금액 전송
-                            writePayMoneyList();    // 입력 금액 리스트 전송
+                            vendingMachine.updateChangeMoney(4);
+                            remainMoney += 1000;
+                            writer.println(remainMoney);   // 총 금액 전송
                             break;
                     }
-                } else if (split[0].equals("return")) { // 미구현---------------
+                } else if (split[0].equals("return")) { // 금액 반환
                     switch (split[1]) {
-                        case "":
-                            Calculator.returnChange();   // 거스름돈 수량 변경
-                            writer.println(remainMoney);    // 거스름돈 수량 반환
+                        case "payBack":
+                            writer.println(remainMoney);    // 거스름돈 금액 반환
+                            System.out.println("거스름돈 금액 : " + remainMoney);
+                            returnChange();   // 거스름돈 수량 변경
                     }
                 }
             }
+
         } catch (IOException e) {
             e.printStackTrace();
+        }
+    }
+
+    public void returnChange() {
+        for (int i = COIN_VALUES.size() -1; i >= 0; i--) {
+            int coinValue = COIN_VALUES.get(i);
+            int coinCount = Math.min(remainMoney / coinValue, changeMoney.get(i)); // 사용 가능한 동전 개수와 최소값 계산
+            if (coinCount > 0) {
+                System.out.println(coinValue + "원 동전: " + coinCount + "개");
+                remainMoney -= coinValue * coinCount;
+                changeMoney.set(i, changeMoney.get(i) - coinCount); // 사용한 동전 개수만큼 감소
+                writer.println(coinValue + "원 " + coinCount + "개");
+            } else {
+                writer.println("");
+            }
         }
     }
 
@@ -131,20 +147,8 @@ public class VendingMachineThread implements Runnable {
         }
     }
 
-    private void writePayMoneyList() {
-        for (Integer integer : payMoney) {
-            writer.println(integer);
-        }
-    }
-
     private static void writeQuantityList(PrintWriter writer) {
         for (Integer integer : quantityList) {
-            writer.println(integer);
-        }
-    }
-
-    private static void writePayMoney(PrintWriter writer) {
-        for (Integer integer : payMoney) {
             writer.println(integer);
         }
     }
