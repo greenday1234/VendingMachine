@@ -15,6 +15,7 @@ public class VendingMachine {
     public static List<Integer> changeMoney;
     public static List<Integer> payMoney;
     public static List<Integer> quantityList;
+    public static int remainMoney;
 
     private Water water;
     private Coffee coffee;
@@ -37,6 +38,8 @@ public class VendingMachine {
         changeMoneyInit();
         payMoney = new ArrayList<>();
         payMoneyInit();
+
+        remainMoney = 0;
     }
 
     private void payMoneyInit() {

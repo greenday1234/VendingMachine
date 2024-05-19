@@ -33,4 +33,36 @@ public class Validation {
         }
         return true;
     }
+
+    public static Boolean validQuantity(String text, List<Integer> quantityList) {
+        Boolean result = true;
+        switch (text) {
+            case "water":
+                if (quantityList.get(0) <= 0) {
+                    result = false;
+                }
+            case "coffee":
+                if (quantityList.get(1) <= 0) {
+                    result = false;
+                }
+                return true;
+            case "sportsDrink":
+                if (quantityList.get(2) <= 0) {
+                    result = false;
+                }
+            case "highQualityCoffee":
+                if (quantityList.get(3) <= 0) {
+                    result = false;
+                }
+            case "soda":
+                if (quantityList.get(4) <= 0) {
+                    result = false;
+                }
+            case "specialDrink":
+                if (quantityList.get(5) <= 0) {
+                    result = false;
+                }
+        }
+        return result;
+    }
 }

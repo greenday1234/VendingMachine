@@ -16,21 +16,19 @@ public class Calculator {
         return result;
     }
 
-    /**
-     * 음료 가격, 현재 거스름돈, 입금 금액
-     */
-    public static int ChangePayMoneyCal(int price) {
+    public static void ChangePayMoneyCal(int price) {
         for (int i = 0; i < changeMoney.size(); i++) {  // 거스름돈에 입금 금액 더하기
             changeMoney.set(i, changeMoney.get(i) + payMoney.get(i));
         }
 
         int result = payMoneyCal();
-        int remainMoney = result - price;   // 계산 후 남은 가격
-        returnChange(remainMoney);
-
+        remainMoney = result - price;   // 계산 후 거스름돈 가격 변경
     }
 
-    private static void returnChange(int remainMoney) {
+    /**
+     * 해당 메소드 위치 변경 해야함!!
+     */
+    public static void returnChange() {
         for (int i = 0; i < COIN_VALUES.size(); i++) {
             int coinValue = COIN_VALUES.get(i);
             int coinCount = Math.min(remainMoney / coinValue, changeMoney.get(i)); // 사용 가능한 동전 개수와 최소값 계산

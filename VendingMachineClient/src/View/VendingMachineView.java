@@ -127,63 +127,97 @@ public class VendingMachineView {
             @Override
             public void actionPerformed(ActionEvent e) {
                 /**
-                 * 이 부분에 구매 가능한지 검증하는 로직 추가해야함!!(금액, 남은 재고 등)
-                 * 거스름돈 계산도 가능한지 확인해야함!!
+                 * 이 부분에 구매 가능한지 검증하는 로직 추가해야함!!(거스름돈)
                  */
 
+                if (!Validation.validQuantity(text, quantityList)) { // 재고 검증
+                    JOptionPane.showMessageDialog(vendingMachineFrame, MessageTexts.QUANTITY_LACK.getText());
+                    return;
+                }
+                if () {
 
+                }
 
                 writer.println("drink " + text);   // 서버에 전송
-                checkTextLabel(text);
+                try {
+                    readUpdateQuantity();   // 재고 수량 읽기
+                    checkTextLabel(text);   // label 변경
 
-
-
+                    updateDeleteMoney();// 넣은 금액 변경
+                    payMoneyCheck();  // 구매 가능 음료 글자 색 변환
+                } catch (IOException ex) {
+                    throw new RuntimeException(ex);
+                }
             }
         });
         vendingMachineFrame.getContentPane().add(button);
     }
 
+    private void readUpdateQuantity() throws IOException {
+        for (int i = 0; i < 6; i++) {
+            String quantity = reader.readLine();
+            quantityList.set(i, Integer.parseInt(quantity));
+        }
+    }
+
     private void checkTextLabel(String text) {
         switch (text) {
             case "water":
-                Integer water = quantityList.get(0);
-                quantityList.set(0, --water);
                 waterQuantityLabel.setText(Integer.toString(quantityList.get(0)));
                 break;
             case "coffee":
-                Integer coffee = quantityList.get(1);
-                quantityList.set(1, --coffee);
                 coffeeQuantityLabel.setText(Integer.toString(quantityList.get(1)));
                 break;
             case "sportsDrink":
-                Integer sportsDrink = quantityList.get(2);
-                quantityList.set(2, --sportsDrink);
                 sportsDrinkQuantityLabel.setText(Integer.toString(quantityList.get(2)));
                 break;
             case "highQualityCoffee":
-                Integer highQualityCoffee = quantityList.get(3);
-                quantityList.set(3, --highQualityCoffee);
                 highQualityCoffeeQuantityLabel.setText(Integer.toString(quantityList.get(3)));
                 break;
             case "soda":
-                Integer soda = quantityList.get(4);
-                quantityList.set(4, --soda);
                 sodaQuantityLabel.setText(Integer.toString(quantityList.get(4)));
                 break;
             case "specialDrink":
-                Integer specialDrink = quantityList.get(5);
-                quantityList.set(5, --specialDrink);
                 specialDrinkQuantityLabel.setText(Integer.toString(quantityList.get(5)));
                 break;
 
         }
     }
 
-    private int updateMoney(String money) throws IOException {
+    private int updateAddMoney(String money) throws IOException {
         addPayMoney(money);
         String payMoneyResult = reader.readLine();
         payMoneyLabel.setText(payMoneyResult + " 원");
         return Integer.parseInt(payMoneyResult);
+    }
+
+    private void updateDeleteMoney() throws IOException {
+        String payMoneyResult = reader.readLine();
+        allPayMoney = Integer.parseInt(payMoneyResult);
+        payMoneyLabel.setText(allPayMoney + " 원");
+    }
+
+    private void deletePayMoney(String text) {
+        switch (text) {
+            case "water":
+                allPayMoney -= 450;
+                break;
+            case "coffee":
+                allPayMoney -= 500;
+                break;
+            case "sportsDrink":
+                allPayMoney -= 550;
+                break;
+            case "highQualityCoffee":
+                allPayMoney -= 700;
+                break;
+            case "soda":
+                allPayMoney -= 750;
+                break;
+            case "specialDrink":
+                allPayMoney -= 800;
+                break;
+        }
     }
 
     private void addPayMoney(String money) {
@@ -252,9 +286,9 @@ public class VendingMachineView {
 
                 writer.println("money " + money); // 넣은 금액을 서버에 전송
                 try {
-                    allPayMoney = updateMoney(money);// 넣은 금액 변환
-                    updatePayMoney();   // PayMoney 리스트 업데이트
-                    payMoneyCheck(allPayMoney);  // 구매 가능 음료 글자 색 변환
+                    allPayMoney = updateAddMoney(money);// 넣은 금액 변환
+                    updateAddPayMoney();   // PayMoney 리스트 업데이트
+                    payMoneyCheck();  // 구매 가능 음료 글자 색 변환
                 } catch (IOException ex) {
                     throw new RuntimeException(ex); // Exception 만들어야 함!!
                 }
@@ -263,7 +297,7 @@ public class VendingMachineView {
         vendingMachineFrame.getContentPane().add(button);
     }
 
-    private void updatePayMoney() throws IOException {
+    private void updateAddPayMoney() throws IOException {
         payMoney.clear();
         for (int i = 0; i < 5; i++) {
             String str = reader.readLine();
@@ -271,23 +305,23 @@ public class VendingMachineView {
         }
     }
 
-    private void payMoneyCheck(int result) {
-        if (result >= 450 && Validation.quantityCheck(waterQuantityLabel.getText())) {
+    private void payMoneyCheck() {
+        if (allPayMoney >= 450 && Validation.quantityCheck(waterQuantityLabel.getText())) {
             waterLabel.setForeground(Color.GREEN);
         }
-        if (result >= 500 && Validation.quantityCheck(coffeeQuantityLabel.getText())) {
+        if (allPayMoney >= 500 && Validation.quantityCheck(coffeeQuantityLabel.getText())) {
             coffeeLabel.setForeground(Color.GREEN);
         }
-        if (result >= 550 && Validation.quantityCheck(sportsDrinkQuantityLabel.getText())) {
+        if (allPayMoney >= 550 && Validation.quantityCheck(sportsDrinkQuantityLabel.getText())) {
             sportsDrinkLabel.setForeground(Color.GREEN);
         }
-        if (result >= 700 && Validation.quantityCheck(highQualityCoffeeQuantityLabel.getText())) {
+        if (allPayMoney >= 700 && Validation.quantityCheck(highQualityCoffeeQuantityLabel.getText())) {
             highQualityCoffeeLabel.setForeground(Color.GREEN);
         }
-        if (result >= 750 && Validation.quantityCheck(sodaQuantityLabel.getText())) {
+        if (allPayMoney >= 750 && Validation.quantityCheck(sodaQuantityLabel.getText())) {
             sodaLabel.setForeground(Color.GREEN);
         }
-        if (result >= 800 && Validation.quantityCheck(specialDrinkQuantityLabel.getText())) {
+        if (allPayMoney >= 800 && Validation.quantityCheck(specialDrinkQuantityLabel.getText())) {
             specialDrinkLabel.setForeground(Color.GREEN);
         }
     }
