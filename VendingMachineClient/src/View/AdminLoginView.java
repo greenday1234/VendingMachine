@@ -7,9 +7,8 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.BufferedReader;
-import java.io.PrintWriter;
 
+import static View.VendingMachineView.password;
 import static View.VendingMachineView.vendingMachineFrame;
 
 public class AdminLoginView {
@@ -44,7 +43,7 @@ public class AdminLoginView {
         loginButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if (passwordField.getText().equals("1234")) {
+                if (passwordField.getText().equals(password.getPassword())) {
                     vendingMachineFrame.setVisible(false);
                     adminLoginFrame.setVisible(false);
                     AdminPageView.adminPageView(socketDto);

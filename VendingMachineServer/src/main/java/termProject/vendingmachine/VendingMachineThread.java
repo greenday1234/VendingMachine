@@ -1,6 +1,7 @@
 package termProject.vendingmachine;
 
 import termProject.vendingmachine.domain.VendingMachine;
+import termProject.vendingmachine.login.Password;
 
 import java.io.*;
 import java.net.Socket;
@@ -11,6 +12,7 @@ public class VendingMachineThread implements Runnable {
 
     private Socket socket;
     private VendingMachine vendingMachine;
+    private Password password;
     private BufferedReader reader;
     private PrintWriter writer;
 
@@ -20,6 +22,7 @@ public class VendingMachineThread implements Runnable {
 
     public void run() {
         vendingMachine = new VendingMachine();
+        password = new Password("@1234567");
 
         try {
             reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
@@ -27,6 +30,7 @@ public class VendingMachineThread implements Runnable {
 
             writeQuantityList(writer);  // 초기 재고 수량 반환
             writeChangeMoney(writer);   // 초기 거스름돈 수량 반환
+            writePassword(writer);  // 비밀번호 반환
 
             while (true) {
                 String clicked = reader.readLine();
@@ -131,6 +135,10 @@ public class VendingMachineThread implements Runnable {
                 writer.println("");
             }
         }
+    }
+
+    private void writePassword(PrintWriter writer) {
+        writer.println(password.getPassword());
     }
 
     private void writeQuantityList() {

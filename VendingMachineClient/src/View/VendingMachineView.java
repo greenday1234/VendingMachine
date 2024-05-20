@@ -1,5 +1,6 @@
 package View;
 
+import login.Password;
 import message.MessageTexts;
 import socket.SocketDto;
 import validate.Validation;
@@ -19,6 +20,7 @@ public class VendingMachineView {
     private final PrintWriter writer;
     private final Socket socket;
 
+    public static Password password = new Password("");
     public static int allPayMoney = 0;
     public static final List<Integer> quantityList = new ArrayList<>(); // 재고 수량
     public static final List<Integer> changeMoney = new ArrayList<>();    // 거스름돈 수량
@@ -51,6 +53,7 @@ public class VendingMachineView {
 
         quantityListInit(); // 재고 수량 초기화
         changeMoneyInit();  // 거스름돈 수량 초기화
+        passwordInit(); // 비밀번호 초기화
 
         // 프레임
         vendingMachineFrame = new JFrame("자판기 프로그램");
@@ -94,6 +97,11 @@ public class VendingMachineView {
         addAdminButton(socketDto);
 
         vendingMachineFrame.setVisible(true);
+    }
+
+    private void passwordInit() throws IOException {
+        String str = reader.readLine();
+        password.updatePassword(str);
     }
 
     private void changeMoneyInit() throws IOException {
