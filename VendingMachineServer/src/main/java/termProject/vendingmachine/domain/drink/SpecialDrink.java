@@ -16,4 +16,8 @@ public class SpecialDrink {
     public void sellSpecialDrink() {
         this.quantity--;
     }
+
+    public void updateSpecialDrinkPrice(int price) {
+        this.price = price;
+    }
 }

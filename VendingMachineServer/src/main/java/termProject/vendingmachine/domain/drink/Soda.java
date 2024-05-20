@@ -16,4 +16,8 @@ public class Soda {
     public void sellSoda() {
         this.quantity--;
     }
+
+    public void updateSodaPrice(int price) {
+        this.price = price;
+    }
 }

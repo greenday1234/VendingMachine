@@ -16,4 +16,8 @@ public class Water {
     public void sellWater() {
         this.quantity--;
     }
+
+    public void updateWaterPrice(int price) {
+        this.price = price;
+    }
 }

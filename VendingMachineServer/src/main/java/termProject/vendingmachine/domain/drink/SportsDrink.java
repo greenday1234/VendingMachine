@@ -16,4 +16,8 @@ public class SportsDrink {
     public void sellSportsDrink() {
         this.quantity --;
     }
+
+    public void updateSportsDrinkPrice(int price) {
+        this.price = price;
+    }
 }

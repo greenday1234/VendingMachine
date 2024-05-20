@@ -16,4 +16,8 @@ public class HighQualityCoffee {
     public void sellHighQualityCoffee() {
         this.quantity--;
     }
+
+    public void updateHighQualityCoffeePrice(int price) {
+        this.price = price;
+    }
 }

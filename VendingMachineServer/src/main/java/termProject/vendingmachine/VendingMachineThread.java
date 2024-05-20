@@ -109,11 +109,32 @@ public class VendingMachineThread implements Runnable {
                             break;
                     }
                 } else if (split[0].equals("return")) { // 금액 반환
-                    switch (split[1]) {
-                        case "payBack":
-                            writer.println(remainMoney);    // 거스름돈 금액 반환
-                            returnChange();   // 거스름돈 수량 변경
-                    }
+
+                    writer.println(remainMoney);    // 거스름돈 금액 반환
+                    returnChange();   // 거스름돈 수량 변경
+                    writeChangeMoney(writer);
+
+                } else if (split[0].equals("price")) {  // 가격 변경
+                        switch (split[1]) {
+                            case "water":
+                                vendingMachine.getWater().updateWaterPrice(Integer.parseInt(split[2]));
+                                break;
+                            case "coffee":
+                                vendingMachine.getCoffee().updateCoffeePrice(Integer.parseInt(split[2]));
+                                break;
+                            case "sportsDrink":
+                                vendingMachine.getSportsDrink().updateSportsDrinkPrice(Integer.parseInt(split[2]));
+                                break;
+                            case "highQualityCoffee":
+                                vendingMachine.getHighQualityCoffee().updateHighQualityCoffeePrice(Integer.parseInt(split[2]));
+                                break;
+                            case "soda":
+                                vendingMachine.getSoda().updateSodaPrice(Integer.parseInt(split[2]));
+                                break;
+                            case "specialDrink":
+                                vendingMachine.getSpecialDrink().updateSpecialDrinkPrice(Integer.parseInt(split[2]));
+                                break;
+                        }
                 }
             }
 

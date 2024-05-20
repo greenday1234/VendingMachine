@@ -155,4 +155,11 @@ public class Validation {
         }
         return true;
     }
+
+    public static Boolean validPayBack() {
+        if (allPayMoney == 0) {
+            return false;
+        }
+        return true;
+    }
 }

@@ -2,6 +2,7 @@ package View;
 
 import login.Password;
 import message.MessageTexts;
+import domain.Drink;
 import socket.SocketDto;
 import validate.Validation;
 
@@ -20,6 +21,7 @@ public class VendingMachineView {
     private final PrintWriter writer;
     private final Socket socket;
 
+    public static Drink drink;
     public static Password password = new Password("");
     public static int allPayMoney = 0;
     public static final List<Integer> quantityList = new ArrayList<>(); // 재고 수량
@@ -27,12 +29,12 @@ public class VendingMachineView {
     public static int check1000 = 0;
     public static final List<Integer> COIN_VALUES = new ArrayList<>(List.of(10, 50, 100, 500, 1000));
 
-    private final JLabel waterLabel;
-    private final JLabel coffeeLabel;
-    private final JLabel sportsDrinkLabel;
-    private final JLabel highQualityCoffeeLabel;
-    private final JLabel sodaLabel;
-    private final JLabel specialDrinkLabel;
+    public static JLabel waterLabel;
+    public static JLabel coffeeLabel;
+    public static JLabel sportsDrinkLabel;
+    public static JLabel highQualityCoffeeLabel;
+    public static JLabel sodaLabel;
+    public static JLabel specialDrinkLabel;
 
     private final JLabel waterQuantityLabel;
     private final JLabel coffeeQuantityLabel;
@@ -41,6 +43,13 @@ public class VendingMachineView {
     private final JLabel sodaQuantityLabel;
     private final JLabel specialDrinkQuantityLabel;
     private final JLabel payMoneyLabel;
+
+    public static JLabel waterNameLabel;
+    public static JLabel coffeeNameLabel;
+    public static JLabel sportsDrinkNameLabel;
+    public static JLabel highQualityCoffeeNameLabel;
+    public static JLabel sodaNameLabel;
+    public static JLabel specialDrinkNameLabel;
 
     public static JFrame vendingMachineFrame;
 
@@ -54,10 +63,13 @@ public class VendingMachineView {
         quantityListInit(); // 재고 수량 초기화
         changeMoneyInit();  // 거스름돈 수량 초기화
         passwordInit(); // 비밀번호 초기화
+        drink = new Drink("물", 450,
+                "커피", 500, "이온음료", 550, "고급 커피",
+                700, "탄산음료", 750, "특별음료", 800);
 
         // 프레임
         vendingMachineFrame = new JFrame("자판기 프로그램");
-        vendingMachineFrame.setBounds(560,200,790,500);
+        vendingMachineFrame.setBounds(560,200,790,600);
         vendingMachineFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         vendingMachineFrame.getContentPane().setLayout(new FlowLayout(FlowLayout.CENTER, 30, 10));
         vendingMachineFrame.getContentPane().setBackground(new Color(151, 100, 100));
@@ -70,6 +82,13 @@ public class VendingMachineView {
         addDrinkButton("soda");
         addDrinkButton("specialDrink");
 
+        waterNameLabel = addNameLabel(drink.getWater());
+        coffeeNameLabel = addNameLabel(drink.getCoffee());
+        sportsDrinkNameLabel =  addNameLabel(drink.getSportsDrink());
+        highQualityCoffeeNameLabel =  addNameLabel(drink.getHighQualityCoffee());
+        sodaNameLabel =   addNameLabel(drink.getSoda());
+        specialDrinkNameLabel =  addNameLabel(drink.getSpecialDrink());
+
         waterQuantityLabel = addQuantityLabel();
         coffeeQuantityLabel = addQuantityLabel();
         sportsDrinkQuantityLabel = addQuantityLabel();
@@ -77,12 +96,12 @@ public class VendingMachineView {
         sodaQuantityLabel = addQuantityLabel();
         specialDrinkQuantityLabel = addQuantityLabel();
 
-        waterLabel = addDrinkLabel(MessageTexts.WATER.getText());
-        coffeeLabel = addDrinkLabel(MessageTexts.COFFEE.getText());
-        sportsDrinkLabel = addDrinkLabel(MessageTexts.SPORTSDRINK.getText());
-        highQualityCoffeeLabel = addDrinkLabel(MessageTexts.HIGHQUALITYCOFFEE.getText());
-        sodaLabel = addDrinkLabel(MessageTexts.SODA.getText());
-        specialDrinkLabel = addDrinkLabel(MessageTexts.SPECIALDRINK.getText());
+        waterLabel = addDrinkLabel(drink.getWaterPrice() + " 원");
+        coffeeLabel = addDrinkLabel(drink.getCoffeePrice() + " 원");
+        sportsDrinkLabel = addDrinkLabel(drink.getSportsDrinkPrice() + " 원");
+        highQualityCoffeeLabel = addDrinkLabel(drink.getHighQualityCoffeePrice() + " 원");
+        sodaLabel = addDrinkLabel(drink.getSodaPrice() + " 원");
+        specialDrinkLabel = addDrinkLabel(drink.getSpecialDrinkPrice() + " 원");
 
         addMoneyButton("10");
         addMoneyButton("50");
@@ -97,6 +116,15 @@ public class VendingMachineView {
         addAdminButton(socketDto);
 
         vendingMachineFrame.setVisible(true);
+    }
+
+    private JLabel addNameLabel(String text) {
+        JLabel label = new JLabel(text, SwingConstants.CENTER);
+        Font font = label.getFont();
+        label.setFont(font.deriveFont(Font.PLAIN, 20));
+        label.setPreferredSize(new Dimension(100, 50));
+        vendingMachineFrame.getContentPane().add(label);
+        return label;
     }
 
     private void passwordInit() throws IOException {
@@ -165,27 +193,27 @@ public class VendingMachineView {
         switch (text) {
             case "water":
                 waterQuantityLabel.setText(quantityList.get(0) + " 개");
-                JOptionPane.showMessageDialog(vendingMachineFrame, MessageTexts.WATER_SELL.getText());
+                JOptionPane.showMessageDialog(vendingMachineFrame, drink.getWater() + " 을 구매하셨습니다.");
                 break;
             case "coffee":
                 coffeeQuantityLabel.setText(quantityList.get(1) + " 개");
-                JOptionPane.showMessageDialog(vendingMachineFrame, MessageTexts.COFFEE_SELL.getText());
+                JOptionPane.showMessageDialog(vendingMachineFrame, drink.getCoffee() + " 을 구매하셨습니다.");
                 break;
             case "sportsDrink":
                 sportsDrinkQuantityLabel.setText(quantityList.get(2) + " 개");
-                JOptionPane.showMessageDialog(vendingMachineFrame, MessageTexts.SPORTSDRINK_SELL.getText());
+                JOptionPane.showMessageDialog(vendingMachineFrame, drink.getSportsDrink() + " 을 구매하셨습니다.");
                 break;
             case "highQualityCoffee":
                 highQualityCoffeeQuantityLabel.setText(quantityList.get(3) + " 개");
-                JOptionPane.showMessageDialog(vendingMachineFrame, MessageTexts.HIGHQUALITYCOFFEE_SELL.getText());
+                JOptionPane.showMessageDialog(vendingMachineFrame, drink.getHighQualityCoffee() + " 을 구매하셨습니다.");
                 break;
             case "soda":
                 sodaQuantityLabel.setText(quantityList.get(4) + " 개");
-                JOptionPane.showMessageDialog(vendingMachineFrame, MessageTexts.SODA_SELL.getText());
+                JOptionPane.showMessageDialog(vendingMachineFrame, drink.getSoda() + " 을 구매하셨습니다.");
                 break;
             case "specialDrink":
                 specialDrinkQuantityLabel.setText(quantityList.get(5) + " 개");
-                JOptionPane.showMessageDialog(vendingMachineFrame, MessageTexts.SPECIALDRINK_SELL.getText());
+                JOptionPane.showMessageDialog(vendingMachineFrame, drink.getSpecialDrink() + " 을 구매하셨습니다.");
                 break;
 
         }
@@ -211,7 +239,7 @@ public class VendingMachineView {
     }
 
     private JLabel addDrinkLabel(String text) {
-        JLabel label = new JLabel(text+" 원", SwingConstants.CENTER);
+        JLabel label = new JLabel(text, SwingConstants.CENTER);
         Font font = label.getFont();
         label.setFont(font.deriveFont(Font.PLAIN, 20));
         label.setPreferredSize(new Dimension(100, 50));
@@ -297,9 +325,12 @@ public class VendingMachineView {
         button.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                if (!Validation.validPayBack()) {
+                    JOptionPane.showMessageDialog(vendingMachineFrame, MessageTexts.PAYBACK_LACK.getText());
+                    return;
+                }
 
-
-                writer.println("return payBack"); // 넣은 금액을 서버에 전송
+                writer.println("return "); // 넣은 금액을 서버에 전송
                 try {
                     String remainMoney = reader.readLine();
                     allPayMoney = 0;
@@ -308,12 +339,20 @@ public class VendingMachineView {
                             remainMoney + MessageTexts.PAYBACK.getText() + "\n" + remainText);
                     payMoneyLabel.setText(allPayMoney + " 원");
                     payMoneyCheck();
+                    readChangeMoney();
                 } catch (IOException ex) {
                     throw new RuntimeException(ex);
                 }
             }
         });
         vendingMachineFrame.getContentPane().add(button);
+    }
+
+    private void readChangeMoney() throws IOException {
+        for (int i = 0; i < 5; i++) {
+            String str = reader.readLine();
+            changeMoney.set(i, Integer.parseInt(str));
+        }
     }
 
     private String readRemainMoney() throws IOException {
