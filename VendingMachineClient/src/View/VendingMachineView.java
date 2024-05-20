@@ -299,12 +299,10 @@ public class VendingMachineView {
                     JOptionPane.showMessageDialog(vendingMachineFrame,
                             remainMoney + MessageTexts.PAYBACK.getText() + "\n" + remainText);
                     payMoneyLabel.setText(allPayMoney + " 원");
-                    payMoneyCheck();ㄴ 궇
+                    payMoneyCheck();
                 } catch (IOException ex) {
                     throw new RuntimeException(ex);
                 }
-
-
             }
         });
         vendingMachineFrame.getContentPane().add(button);

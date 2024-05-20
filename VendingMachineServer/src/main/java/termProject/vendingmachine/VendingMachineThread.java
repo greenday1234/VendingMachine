@@ -1,7 +1,6 @@
 package termProject.vendingmachine;
 
 import termProject.vendingmachine.domain.VendingMachine;
-import termProject.vendingmachine.util.Calculator;
 
 import java.io.*;
 import java.net.Socket;
@@ -109,7 +108,6 @@ public class VendingMachineThread implements Runnable {
                     switch (split[1]) {
                         case "payBack":
                             writer.println(remainMoney);    // 거스름돈 금액 반환
-                            System.out.println("거스름돈 금액 : " + remainMoney);
                             returnChange();   // 거스름돈 수량 변경
                     }
                 }

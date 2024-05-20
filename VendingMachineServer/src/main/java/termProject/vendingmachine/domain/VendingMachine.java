@@ -12,7 +12,6 @@ public class VendingMachine {
     public static final List<Integer> COIN_VALUES = new ArrayList<>(List.of(10, 50, 100, 500, 1000));
 
     public static List<Integer> changeMoney;
-    public static List<Integer> payMoney;
     public static List<Integer> quantityList;
     public static int remainMoney;
 
@@ -35,18 +34,7 @@ public class VendingMachine {
         quantityInit();
         changeMoney = new ArrayList<>();
         changeMoneyInit();
-        payMoney = new ArrayList<>();
-        payMoneyInit();
-
         remainMoney = 0;
-    }
-
-    private void payMoneyInit() {
-        payMoney.add(0);
-        payMoney.add(0);
-        payMoney.add(0);
-        payMoney.add(0);
-        payMoney.add(0);
     }
 
     /**
