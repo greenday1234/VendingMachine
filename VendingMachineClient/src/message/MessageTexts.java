@@ -8,7 +8,8 @@ public enum MessageTexts {
     CHANGE_MONEY_LACK("거슬러 줄 금액이 부족합니다. 죄송하지만 다른 동전이나 지폐를 넣어주세요."),
     MONEY_LACK("금액이 부족합니다."),
     PAYBACK(" 원을 반환하였습니다."),
-    PAYBACK_LACK("돌려받을 금액이 없습니다.");
+    PAYBACK_LACK("돌려받을 금액이 없습니다."),
+    COLLECTMONEY(" 원을 수금하였습니다.");
 
     private String text;
 

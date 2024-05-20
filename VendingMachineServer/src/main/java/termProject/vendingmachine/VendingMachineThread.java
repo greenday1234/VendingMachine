@@ -135,11 +135,20 @@ public class VendingMachineThread implements Runnable {
                                 vendingMachine.getSpecialDrink().updateSpecialDrinkPrice(Integer.parseInt(split[2]));
                                 break;
                         }
+                } else if (split[0].equals("collectMoney")) {   // 수금
+                    readChangeMoney();
                 }
             }
 
         } catch (IOException e) {
             e.printStackTrace();
+        }
+    }
+
+    private void readChangeMoney() throws IOException {
+        for (int i = 0; i < 5; i++) {
+            String str = reader.readLine();
+            changeMoney.set(i, Integer.parseInt(str));
         }
     }
 

@@ -1,5 +1,6 @@
 package View;
 
+import message.MessageTexts;
 import socket.SocketDto;
 
 import javax.swing.*;
@@ -15,11 +16,11 @@ public class AdminPageView {
     private BufferedReader reader;
     private PrintWriter writer;
 
-    private final JLabel money10QuantityLabel;
-    private final JLabel money50QuantityLabel;
-    private final JLabel money100QuantityLabel;
-    private final JLabel money500QuantityLabel;
-    private final JLabel money1000QuantityLabel;
+    private JLabel money10QuantityLabel;
+    private JLabel money50QuantityLabel;
+    private JLabel money100QuantityLabel;
+    private JLabel money500QuantityLabel;
+    private JLabel money1000QuantityLabel;
 
     private JFrame adminPageFrame;
 
@@ -30,7 +31,7 @@ public class AdminPageView {
 
         // 프레임
         adminPageFrame = new JFrame("관리자 페이지");
-        adminPageFrame.setBounds(560,200,800,500);
+        adminPageFrame.setBounds(560,200,800,600);
         adminPageFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         adminPageFrame.getContentPane().setLayout(new GridBagLayout());
         adminPageFrame.getContentPane().setBackground(new Color(255, 255, 255, 255));
@@ -40,7 +41,6 @@ public class AdminPageView {
         gbc.insets = new Insets(3, 3, 3, 3); // 여백 설정
 
         /**
-         * 4. 수금메뉴 (반환을 위한 최소한의 화폐는 임의로 지정해 남김)
          * 5. 일별/월별 매출
          * 6. 재고 소진 날짜
          * 7. 비밀번호 설정
@@ -59,18 +59,66 @@ public class AdminPageView {
         addChangeDrinkNamePriceRow(gbc, 6, specialDrinkNameLabel, drink.getSpecialDrinkPrice(), 5);
 
         // 수금메뉴
-        addCollectMoney(gbc, 7);
+        addCollectMoney(gbc, 7, "collectMoney", 0);
 
-        // 프레임 표시
-        adminPageFrame.setVisible(true);
 
 
 
         adminPageFrame.setVisible(true);
     }
 
-    private void addCollectMoney(GridBagConstraints gbc, int row) {
-        
+    private void addCollectMoney(GridBagConstraints gbc, int row, String text, int index) {
+        JLabel moneyLabel = new JLabel("수금하기");
+        Font font = moneyLabel.getFont();
+        moneyLabel.setFont(font.deriveFont(Font.PLAIN, 20));
+        moneyLabel.setPreferredSize(new Dimension(70, 50));
+        gbc.gridx = 0;
+        gbc.gridy = row;
+        adminPageFrame.add(moneyLabel, gbc);
+
+        ImageIcon icon = new ImageIcon("image/" + text + ".png");
+        Image img = icon.getImage();
+        Image newImg = img.getScaledInstance(70, 70, Image.SCALE_SMOOTH);
+        icon = new ImageIcon(newImg);
+
+        JButton button = new JButton(icon);
+        gbc.gridx = 1;
+        button.addActionListener(e -> {
+            int collectMoney = checkCollectMoney();
+            writeChangeMoney();
+            updateChangeMoneyLabel();
+            JOptionPane.showMessageDialog(adminPageFrame, collectMoney + MessageTexts.COLLECTMONEY.getText());
+        });
+        adminPageFrame.add(button, gbc);
+    }
+
+    private void updateChangeMoneyLabel() {
+        money10QuantityLabel.setText("10 원 " + changeMoney.get(0) + " 개");
+        money50QuantityLabel.setText("50 원 " + changeMoney.get(1) + " 개");
+        money100QuantityLabel.setText("100 원 " + changeMoney.get(2) + " 개");
+        money500QuantityLabel.setText("500 원 " + changeMoney.get(3) + " 개");
+        money1000QuantityLabel.setText("1000 원 " + changeMoney.get(4) + " 개");
+    }
+
+    private void writeChangeMoney() {
+        writer.println("collectMoney ");
+        for (int i = 0; i < 5; i++) {
+            writer.println(changeMoney.get(i));
+        }
+    }
+
+    private int checkCollectMoney() {
+        int result = 0;
+        for (int i = 0; i < changeMoney.size(); i++) {
+            Integer money = changeMoney.get(i);
+            if (money > 5) {
+                int excess = money - 5;
+                result += COIN_VALUES.get(i) * excess;
+                changeMoney.set(i, 5);
+            }
+        }
+
+        return result;
     }
 
     private void addChangeDrinkNamePriceRow(GridBagConstraints gbc, int row, JLabel drinkNameLabel, int price, int index) {
