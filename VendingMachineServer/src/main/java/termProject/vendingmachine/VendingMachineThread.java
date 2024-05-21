@@ -5,16 +5,31 @@ import termProject.vendingmachine.login.Password;
 
 import java.io.*;
 import java.net.Socket;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 import static termProject.vendingmachine.domain.VendingMachine.*;
 
 public class VendingMachineThread implements Runnable {
 
     private Socket socket;
-    private VendingMachine vendingMachine;
+    private static VendingMachine vendingMachine;
     private Password password;
     private BufferedReader reader;
     private PrintWriter writer;
+    private static BufferedReader dailyReader;
+    private static BufferedReader monthlyReader;
+    private static FileWriter dailyFileWriter;
+    private static FileReader dailyFileReader;
+    private static FileWriter monthlyFileWriter;
+    private static FileReader monthlyFileReader;
+
+    // 일별 판매 금액 데이터 생성
+    private static Map<String, Integer> dailySales = new HashMap<>();
+    // 월별 판매 금액 데이터 생성
+    private static Map<String, Integer> monthlySales = new HashMap<>();
 
     public VendingMachineThread(Socket socket) {
         this.socket = socket;
@@ -27,6 +42,12 @@ public class VendingMachineThread implements Runnable {
         try {
             reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
             writer = new PrintWriter(socket.getOutputStream(), true);
+            dailyFileWriter = new FileWriter("./sales/dailySales.txt");
+            dailyFileReader = new FileReader("./sales/dailySales.txt");
+            monthlyFileWriter = new FileWriter("./sales/monthlySales.txt");
+            monthlyFileReader = new FileReader("./sales/monthlySales.txt");
+            dailyReader = new BufferedReader(dailyFileReader);
+            monthlyReader = new BufferedReader(monthlyFileReader);
 
             writeQuantityList(writer);  // 초기 재고 수량 반환
             writeChangeMoney(writer);   // 초기 거스름돈 수량 반환
@@ -38,46 +59,70 @@ public class VendingMachineThread implements Runnable {
                 if (split[0].equals("drink")) { // 음료 결제
                     switch (split[1]) {
                         case "water":
+                            addDailySale(updateDate(), vendingMachine.getWater().getPrice());   // 전체 판매 금액 변경 일별
+                            calculateMonthlySales();    // 전체 판매 금액 월별
                             vendingMachine.getWater().sellWater();  // 재고 수량 변경
                             quantityList.set(0, vendingMachine.getWater().getQuantity());
                             writeQuantityList();    // 재고 수량 반환
                             remainMoney -= vendingMachine.getWater().getPrice();
                             writer.println(remainMoney);    // 입력 금액 변경 및 반환
+                            readAndWriteDailyFile();    // 일별 판매 금액 반환
+                            readAndWriteMonthlyFile();  // 월별 판매 금액 반환
                             break;
                         case "coffee":
+                            addDailySale(updateDate(), vendingMachine.getCoffee().getPrice());
+                            calculateMonthlySales();
                             vendingMachine.getCoffee().sellCoffee();  // 재고 수량 변경
                             quantityList.set(1, vendingMachine.getCoffee().getQuantity());
                             writeQuantityList();    // 재고 수량 반환
                             remainMoney -= vendingMachine.getCoffee().getPrice();
                             writer.println(remainMoney);    // 입력 금액 변경 및 반환
+                            readAndWriteDailyFile();    // 일별 판매 금액 반환
+                            readAndWriteMonthlyFile();  // 월별 판매 금액 반환
                             break;
                         case "sportsDrink":
+                            addDailySale(updateDate(), vendingMachine.getSportsDrink().getPrice());
+                            calculateMonthlySales();
                             vendingMachine.getSportsDrink().sellSportsDrink();  // 재고 수량 변경
                             quantityList.set(2, vendingMachine.getSportsDrink().getQuantity());
                             writeQuantityList();    // 재고 수량 반환
                             remainMoney -= vendingMachine.getSportsDrink().getPrice();
                             writer.println(remainMoney);    // 입력 금액 변경 및 반환
+                            readAndWriteDailyFile();    // 일별 판매 금액 반환
+                            readAndWriteMonthlyFile();  // 월별 판매 금액 반환
                             break;
                         case "highQualityCoffee":
+                            addDailySale(updateDate(), vendingMachine.getHighQualityCoffee().getPrice());
+                            calculateMonthlySales();
                             vendingMachine.getHighQualityCoffee().sellHighQualityCoffee();  // 재고 수량 변경
                             quantityList.set(3, vendingMachine.getHighQualityCoffee().getQuantity());
                             writeQuantityList();    // 재고 수량 반환
                             remainMoney -= vendingMachine.getHighQualityCoffee().getPrice();
                             writer.println(remainMoney);    // 입력 금액 변경 및 반환
+                            readAndWriteDailyFile();    // 일별 판매 금액 반환
+                            readAndWriteMonthlyFile();  // 월별 판매 금액 반환
                             break;
                         case "soda":
+                            addDailySale(updateDate(), vendingMachine.getSoda().getPrice());
+                            calculateMonthlySales();
                             vendingMachine.getSoda().sellSoda();  // 재고 수량 변경
                             quantityList.set(4, vendingMachine.getSoda().getQuantity());
                             writeQuantityList();    // 재고 수량 반환
                             remainMoney -= vendingMachine.getSoda().getPrice();
                             writer.println(remainMoney);    // 입력 금액 변경 및 반환
+                            readAndWriteDailyFile();    // 일별 판매 금액 반환
+                            readAndWriteMonthlyFile();  // 월별 판매 금액 반환
                             break;
                         case "specialDrink":
+                            addDailySale(updateDate(), vendingMachine.getSpecialDrink().getPrice());
+                            calculateMonthlySales();
                             vendingMachine.getSpecialDrink().sellSpecialDrink();  // 재고 수량 변경
                             quantityList.set(5, vendingMachine.getSpecialDrink().getQuantity());
                             writeQuantityList();    // 재고 수량 반환
                             remainMoney -= vendingMachine.getSpecialDrink().getPrice();
                             writer.println(remainMoney);    // 입력 금액 변경 및 반환
+                            readAndWriteDailyFile();    // 일별 판매 금액 반환
+                            readAndWriteMonthlyFile();  // 월별 판매 금액 반환
                             break;
                     }
                 } else if (split[0].equals("money")){    // 화폐 입금
@@ -139,10 +184,65 @@ public class VendingMachineThread implements Runnable {
                     readChangeMoney();
                 }
             }
-
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    private void readAndWriteMonthlyFile() throws IOException {
+        monthlyReader.close();
+
+        monthlyReader = new BufferedReader(new FileReader("./sales/monthlySales.txt"));
+
+        String line;
+        monthlyReader.mark(0);
+        while ((line = monthlyReader.readLine()) != null) {
+            String[] parts = line.split(":");
+                String date = parts[0];
+                int sales = Integer.parseInt(parts[1].trim());
+                writer.println(date + " " + sales);
+        }
+        writer.println("done");
+    }
+
+    private void readAndWriteDailyFile() throws IOException {
+        dailyReader.close();
+
+        dailyReader = new BufferedReader(new FileReader("./sales/dailySales.txt"));
+
+        String line;
+        dailyReader.mark(0);
+        while ((line = dailyReader.readLine()) != null) {
+            String[] parts = line.split(":");
+                String date = parts[0];
+                int sales = Integer.parseInt(parts[1].trim());
+                writer.println(date + " " + sales);
+        }
+        writer.println("done");
+    }
+
+    // 일별 매출 데이터를 기반으로 월별 매출 데이터를 생성하는 메소드
+    public static void calculateMonthlySales() throws IOException {
+        monthlySales.clear();
+
+        for (Map.Entry<String, Integer> entry : dailySales.entrySet()) {
+            String date = entry.getKey();
+            Integer sales = entry.getValue();
+            updateMonthlySales(date, sales);
+        }
+
+        for (Map.Entry<String, Integer> entry : monthlySales.entrySet()) {
+            if (updateSale(entry.getKey(), entry.getValue(), "./sales/monthlySales.txt")) {
+                monthlyFileWriter.write(entry.getKey() + ":" + entry.getValue() + "\n");
+            }
+        }
+        monthlyFileWriter.flush();
+    }
+
+    // 월별 매출 데이터를 업데이트하는 메소드
+    public static void updateMonthlySales(String date, int amount) {
+        String month = date.substring(0, 7); // "YYYY-MM" 형식으로 월 추출
+        monthlySales.put(month, monthlySales.getOrDefault(month, 0) + amount);
     }
 
     private void readChangeMoney() throws IOException {
@@ -157,7 +257,6 @@ public class VendingMachineThread implements Runnable {
             int coinValue = COIN_VALUES.get(i);
             int coinCount = Math.min(remainMoney / coinValue, changeMoney.get(i)); // 사용 가능한 동전 개수와 최소값 계산
             if (coinCount > 0) {
-                System.out.println(coinValue + "원 동전: " + coinCount + "개");
                 remainMoney -= coinValue * coinCount;
                 changeMoney.set(i, changeMoney.get(i) - coinCount); // 사용한 동전 개수만큼 감소
                 writer.println(coinValue + "원 " + coinCount + "개");
@@ -165,6 +264,51 @@ public class VendingMachineThread implements Runnable {
                 writer.println("");
             }
         }
+    }
+
+    private static String updateDate() {
+        Date now = new Date();
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+        formatter.setTimeZone(TimeZone.getTimeZone("UTC"));
+        return formatter.format(now);
+    }
+
+    private static void addDailySale(String date, int amount) throws IOException {
+        Integer price = dailySales.get(date);
+        if (price == null) {
+            price = 0;
+        }
+        int result = price + amount;
+        dailySales.put(date, result);
+
+        for (Map.Entry<String, Integer> entry : dailySales.entrySet()) {
+            if (updateSale(entry.getKey(), result, "./sales/dailySales.txt")) {
+                dailyFileWriter.write(entry.getKey() + ":" + entry.getValue() + "\n");
+            }
+        }
+        dailyFileWriter.flush();
+    }
+
+    public static Boolean updateSale(String date, int result, String path) throws IOException {
+        // 파일의 모든 내용을 읽음
+        List<String> lines = Files.readAllLines(Paths.get(path));
+        List<String> updatedLines = new ArrayList<>();
+        Boolean tmp = true;
+        // 파일의 각 줄을 처리
+        for (String line : lines) {
+            String[] parts = line.split(":");
+            if (parts.length == 2 && parts[0].equals(date)) {
+                // 특정 날짜의 값을 변경
+                updatedLines.add(parts[0] + ":" + result);
+                tmp = false;
+            } else {
+                updatedLines.add(line);
+            }
+        }
+
+        // 변경된 내용을 파일에 다시 씀
+        Files.write(Paths.get(path), updatedLines);
+        return tmp;
     }
 
     private void writePassword(PrintWriter writer) {

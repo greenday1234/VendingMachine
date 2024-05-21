@@ -12,7 +12,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.*;
 import java.net.Socket;
-import java.util.ArrayList;
+import java.util.*;
 import java.util.List;
 
 public class VendingMachineView {
@@ -27,6 +27,8 @@ public class VendingMachineView {
     public static final List<Integer> quantityList = new ArrayList<>(); // 재고 수량
     public static final List<Integer> changeMoney = new ArrayList<>();    // 거스름돈 수량
     public static int check1000 = 0;
+    public static final TreeMap<String, Integer> dailySales = new TreeMap<>();
+    public static final TreeMap<String, Integer> monthlySales = new TreeMap<>();
     public static final List<Integer> COIN_VALUES = new ArrayList<>(List.of(10, 50, 100, 500, 1000));
 
     public static JLabel waterLabel;
@@ -157,7 +159,6 @@ public class VendingMachineView {
                     JOptionPane.showMessageDialog(vendingMachineFrame, MessageTexts.MONEY_LACK.getText());
                     return;
                 }
-
                 if (!Validation.validQuantity(text)) { // 재고 검증
                     JOptionPane.showMessageDialog(vendingMachineFrame, MessageTexts.QUANTITY_LACK.getText());
                     return;
@@ -174,12 +175,32 @@ public class VendingMachineView {
 
                     updateDeleteMoney();// 넣은 금액 변경
                     payMoneyCheck();  // 구매 가능 음료 글자 색 변환
+                    readDailySales();
+                    readMonthlySales();
                 } catch (IOException ex) {
                     throw new RuntimeException(ex);
                 }
             }
         });
         vendingMachineFrame.getContentPane().add(button);
+    }
+
+    private void readMonthlySales() throws IOException {
+        String line;
+        while (!(line = reader.readLine()).equals("done")) {
+            String[] parts = line.split(" ");
+            System.out.println(parts[0]);
+            monthlySales.put(parts[0], Integer.parseInt(parts[1].trim()));
+        }
+    }
+
+    private void readDailySales() throws IOException {
+        String line;
+        while (!(line = reader.readLine()).equals("done")) {
+            String[] parts = line.split(" ");
+            System.out.println(parts[0]);
+            dailySales.put(parts[0], Integer.parseInt(parts[1].trim()));
+        }
     }
 
     private void readUpdateQuantity() throws IOException {

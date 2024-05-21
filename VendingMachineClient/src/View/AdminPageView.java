@@ -7,6 +7,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.io.BufferedReader;
 import java.io.PrintWriter;
+import java.util.Map;
 
 import static View.VendingMachineView.*;
 import static View.VendingMachineView.drink;
@@ -58,13 +59,54 @@ public class AdminPageView {
         addChangeDrinkNamePriceRow(gbc, 5, sodaNameLabel, drink.getSodaPrice(), 4);
         addChangeDrinkNamePriceRow(gbc, 6, specialDrinkNameLabel, drink.getSpecialDrinkPrice(), 5);
 
-        // 수금메뉴
         addCollectMoney(gbc, 7, "collectMoney", 0);
 
-
+        // 일별 매출
+        addDailySales(gbc, 8);
+        addMonthlySales(gbc, 9);
 
 
         adminPageFrame.setVisible(true);
+    }
+
+    private void addMonthlySales(GridBagConstraints gbc, int row) {
+        JLabel monthlySalesLabel = new JLabel("월별 매출");
+        Font font = monthlySalesLabel.getFont();
+        monthlySalesLabel.setFont(font.deriveFont(Font.PLAIN, 20));
+        monthlySalesLabel.setPreferredSize(new Dimension(70, 50));
+        gbc.gridx = 0;
+        gbc.gridy = row;
+        adminPageFrame.add(monthlySalesLabel, gbc);
+
+        int index = 1;
+        for (Map.Entry<String, Integer> entry : monthlySales.entrySet()) {
+            addLabel(gbc, row, index++, entry.getKey(), entry.getValue());
+        }
+    }
+
+    private void addDailySales(GridBagConstraints gbc, int row) {
+        JLabel daySalesLabel = new JLabel("일별 매출");
+        Font font = daySalesLabel.getFont();
+        daySalesLabel.setFont(font.deriveFont(Font.PLAIN, 20));
+        daySalesLabel.setPreferredSize(new Dimension(70, 50));
+        gbc.gridx = 0;
+        gbc.gridy = row;
+        adminPageFrame.add(daySalesLabel, gbc);
+
+        int index = 1;
+        for (Map.Entry<String, Integer> entry : dailySales.entrySet()) {
+            addLabel(gbc, row, index++, entry.getKey(), entry.getValue());
+        }
+    }
+
+    private void addLabel(GridBagConstraints gbc, int row, int index, String key, Integer value) {
+        JLabel daySalesLabel = new JLabel(key + " " + value);
+        Font font = daySalesLabel.getFont();
+        daySalesLabel.setFont(font.deriveFont(Font.PLAIN, 20));
+        daySalesLabel.setPreferredSize(new Dimension(70, 50));
+        gbc.gridx = index;
+        gbc.gridy = row;
+        adminPageFrame.add(daySalesLabel, gbc);
     }
 
     private void addCollectMoney(GridBagConstraints gbc, int row, String text, int index) {
@@ -139,7 +181,7 @@ public class AdminPageView {
         gbc.gridx = 3;
         adminPageFrame.add(priceTextField, gbc);
 
-        JButton button = new JButton("Submit");
+        JButton button = new JButton("변경");
         gbc.gridx = 4;
         button.addActionListener(e -> {
             checkIndex(index, nameLabel, priceLabel, nameTextField, priceTextField);
