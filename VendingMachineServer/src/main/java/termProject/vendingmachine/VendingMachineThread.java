@@ -51,6 +51,7 @@ public class VendingMachineThread implements Runnable {
 
             writeQuantityList(writer);  // 초기 재고 수량 반환
             writeChangeMoney(writer);   // 초기 거스름돈 수량 반환
+            writeStockDate(writer);     // 초기 재고 소진 일자 반환
             writePassword(writer);  // 비밀번호 반환
 
             while (true) {
@@ -64,6 +65,7 @@ public class VendingMachineThread implements Runnable {
                             vendingMachine.getWater().sellWater();  // 재고 수량 변경
                             quantityList.set(0, vendingMachine.getWater().getQuantity());
                             writeQuantityList();    // 재고 수량 반환
+                            writeStock(writer, 0);   // 재고 소진 일자 반환
                             remainMoney -= vendingMachine.getWater().getPrice();
                             writer.println(remainMoney);    // 입력 금액 변경 및 반환
                             readAndWriteDailyFile();    // 일별 판매 금액 반환
@@ -75,6 +77,7 @@ public class VendingMachineThread implements Runnable {
                             vendingMachine.getCoffee().sellCoffee();  // 재고 수량 변경
                             quantityList.set(1, vendingMachine.getCoffee().getQuantity());
                             writeQuantityList();    // 재고 수량 반환
+                            writeStock(writer, 1);   // 재고 소진 일자 반환
                             remainMoney -= vendingMachine.getCoffee().getPrice();
                             writer.println(remainMoney);    // 입력 금액 변경 및 반환
                             readAndWriteDailyFile();    // 일별 판매 금액 반환
@@ -86,6 +89,7 @@ public class VendingMachineThread implements Runnable {
                             vendingMachine.getSportsDrink().sellSportsDrink();  // 재고 수량 변경
                             quantityList.set(2, vendingMachine.getSportsDrink().getQuantity());
                             writeQuantityList();    // 재고 수량 반환
+                            writeStock(writer, 2);   // 재고 소진 일자 반환
                             remainMoney -= vendingMachine.getSportsDrink().getPrice();
                             writer.println(remainMoney);    // 입력 금액 변경 및 반환
                             readAndWriteDailyFile();    // 일별 판매 금액 반환
@@ -97,6 +101,7 @@ public class VendingMachineThread implements Runnable {
                             vendingMachine.getHighQualityCoffee().sellHighQualityCoffee();  // 재고 수량 변경
                             quantityList.set(3, vendingMachine.getHighQualityCoffee().getQuantity());
                             writeQuantityList();    // 재고 수량 반환
+                            writeStock(writer, 3);   // 재고 소진 일자 반환
                             remainMoney -= vendingMachine.getHighQualityCoffee().getPrice();
                             writer.println(remainMoney);    // 입력 금액 변경 및 반환
                             readAndWriteDailyFile();    // 일별 판매 금액 반환
@@ -108,6 +113,7 @@ public class VendingMachineThread implements Runnable {
                             vendingMachine.getSoda().sellSoda();  // 재고 수량 변경
                             quantityList.set(4, vendingMachine.getSoda().getQuantity());
                             writeQuantityList();    // 재고 수량 반환
+                            writeStock(writer, 4);   // 재고 소진 일자 반환
                             remainMoney -= vendingMachine.getSoda().getPrice();
                             writer.println(remainMoney);    // 입력 금액 변경 및 반환
                             readAndWriteDailyFile();    // 일별 판매 금액 반환
@@ -119,6 +125,7 @@ public class VendingMachineThread implements Runnable {
                             vendingMachine.getSpecialDrink().sellSpecialDrink();  // 재고 수량 변경
                             quantityList.set(5, vendingMachine.getSpecialDrink().getQuantity());
                             writeQuantityList();    // 재고 수량 반환
+                            writeStock(writer, 5);   // 재고 소진 일자 반환
                             remainMoney -= vendingMachine.getSpecialDrink().getPrice();
                             writer.println(remainMoney);    // 입력 금액 변경 및 반환
                             readAndWriteDailyFile();    // 일별 판매 금액 반환
@@ -186,6 +193,24 @@ public class VendingMachineThread implements Runnable {
             }
         } catch (IOException e) {
             e.printStackTrace();
+        }
+    }
+
+    private void writeStock(PrintWriter writer, int index) {
+        if (quantityList.get(index) != 0) {
+            writer.println("- -");
+        } else {
+            writer.println(index + " " + updateDate());
+        }
+    }
+
+    private void writeStockDate(PrintWriter writer) {
+        for (int i = 0; i < 6; i++) {
+            if (quantityList.get(i) == 0) {
+                writer.println(updateDate());
+            } else {
+                writer.println("0");
+            }
         }
     }
 

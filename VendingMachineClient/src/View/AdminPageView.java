@@ -41,11 +41,6 @@ public class AdminPageView {
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.insets = new Insets(3, 3, 3, 3); // 여백 설정
 
-        /**
-         * 5. 일별/월별 매출
-         * 6. 재고 소진 날짜
-         * 7. 비밀번호 설정
-         */
         money10QuantityLabel = addMoneyQuantityLabel(gbc, 0, "10");
         money50QuantityLabel = addMoneyQuantityLabel(gbc, 1, "50");
         money100QuantityLabel = addMoneyQuantityLabel(gbc, 2, "100");
@@ -53,20 +48,59 @@ public class AdminPageView {
         money1000QuantityLabel = addMoneyQuantityLabel(gbc, 4, "1000");
 
         addChangeDrinkNamePriceRow(gbc, 1, waterNameLabel, drink.getWaterPrice(), 0);
-        addChangeDrinkNamePriceRow(gbc, 2, coffeeNameLabel, drink.getCoffeePrice(), 1);
-        addChangeDrinkNamePriceRow(gbc, 3, sportsDrinkNameLabel, drink.getSportsDrinkPrice(), 2);
-        addChangeDrinkNamePriceRow(gbc, 4, highQualityCoffeeNameLabel, drink.getHighQualityCoffeePrice(), 3);
-        addChangeDrinkNamePriceRow(gbc, 5, sodaNameLabel, drink.getSodaPrice(), 4);
-        addChangeDrinkNamePriceRow(gbc, 6, specialDrinkNameLabel, drink.getSpecialDrinkPrice(), 5);
+        addStockTribe(gbc, 2, 0);
+        addChangeDrinkNamePriceRow(gbc, 3, coffeeNameLabel, drink.getCoffeePrice(), 1);
+        addStockTribe(gbc, 4, 1);
+        addChangeDrinkNamePriceRow(gbc, 5, sportsDrinkNameLabel, drink.getSportsDrinkPrice(), 2);
+        addStockTribe(gbc, 6, 2);
+        addChangeDrinkNamePriceRow(gbc, 7, highQualityCoffeeNameLabel, drink.getHighQualityCoffeePrice(), 3);
+        addStockTribe(gbc, 8, 3);
+        addChangeDrinkNamePriceRow(gbc, 9, sodaNameLabel, drink.getSodaPrice(), 4);
+        addStockTribe(gbc, 10, 4);
+        addChangeDrinkNamePriceRow(gbc, 11, specialDrinkNameLabel, drink.getSpecialDrinkPrice(), 5);
+        addStockTribe(gbc, 12, 5);
 
-        addCollectMoney(gbc, 7, "collectMoney", 0);
+        addDailySales(gbc, 13);
+        addMonthlySales(gbc, 14);
 
-        // 일별 매출
-        addDailySales(gbc, 8);
-        addMonthlySales(gbc, 9);
+        addCollectMoney(gbc, 15, "collectMoney");
 
+        addPWChangeButton(gbc, 15);
 
         adminPageFrame.setVisible(true);
+    }
+
+    private void addPWChangeButton(GridBagConstraints gbc, int row) {
+        JButton button = new JButton("비밀번호 변경");
+        gbc.gridx = 2;
+        gbc.gridy = row;
+        button.addActionListener(e -> {
+            
+        });
+        adminPageFrame.add(button, gbc);
+    }
+
+    private void addStockTribe(GridBagConstraints gbc, int row, int index) {
+        JLabel stockLabel = new JLabel("재고");
+        Font font = stockLabel.getFont();
+        stockLabel.setFont(font.deriveFont(Font.PLAIN, 15));
+        stockLabel.setPreferredSize(new Dimension(50, 50));
+        gbc.gridx = 0;
+        gbc.gridy = row;
+        adminPageFrame.add(stockLabel, gbc);
+
+        JLabel stockCheckLabel;
+        if (stockDate.get(index).equals("0")) {
+            stockCheckLabel = new JLabel(quantityList.get(index) + " 개");
+        } else {
+            stockCheckLabel = new JLabel(stockDate.get(index) + "  소진");
+        }
+        Font checkFont = stockCheckLabel.getFont();
+        stockCheckLabel.setFont(checkFont.deriveFont(Font.PLAIN, 15));
+        stockCheckLabel.setPreferredSize(new Dimension(50, 50));
+        gbc.gridx = 1;
+        gbc.gridy = row;
+        adminPageFrame.add(stockCheckLabel, gbc);
     }
 
     private void addMonthlySales(GridBagConstraints gbc, int row) {
@@ -109,7 +143,7 @@ public class AdminPageView {
         adminPageFrame.add(daySalesLabel, gbc);
     }
 
-    private void addCollectMoney(GridBagConstraints gbc, int row, String text, int index) {
+    private void addCollectMoney(GridBagConstraints gbc, int row, String text) {
         JLabel moneyLabel = new JLabel("수금하기");
         Font font = moneyLabel.getFont();
         moneyLabel.setFont(font.deriveFont(Font.PLAIN, 20));

@@ -26,6 +26,7 @@ public class VendingMachineView {
     public static int allPayMoney = 0;
     public static final List<Integer> quantityList = new ArrayList<>(); // 재고 수량
     public static final List<Integer> changeMoney = new ArrayList<>();    // 거스름돈 수량
+    public static final List<String> stockDate = new ArrayList<>(); // 재고 소진 일자
     public static int check1000 = 0;
     public static final TreeMap<String, Integer> dailySales = new TreeMap<>();
     public static final TreeMap<String, Integer> monthlySales = new TreeMap<>();
@@ -64,6 +65,7 @@ public class VendingMachineView {
 
         quantityListInit(); // 재고 수량 초기화
         changeMoneyInit();  // 거스름돈 수량 초기화
+        stockDateInit();    // 재고 소진 일자 초기화
         passwordInit(); // 비밀번호 초기화
         drink = new Drink("물", 450,
                 "커피", 500, "이온음료", 550, "고급 커피",
@@ -141,6 +143,13 @@ public class VendingMachineView {
         }
     }
 
+    private void stockDateInit() throws IOException {
+        for (int i = 0; i < 6; i++) {
+            String str = reader.readLine();
+            stockDate.add(str);
+        }
+    }
+
     private void quantityListInit() throws IOException {
         for (int i = 0; i < 6; i++) {
             String str = reader.readLine();
@@ -171,6 +180,7 @@ public class VendingMachineView {
                 writer.println("drink " + text);   // 서버에 전송
                 try {
                     readUpdateQuantity();   // 재고 수량 읽기
+                    readStockCheck();   // 재고 소진 일자 읽기
                     checkTextLabel(text);   // label 변경
 
                     updateDeleteMoney();// 넣은 금액 변경
@@ -185,11 +195,18 @@ public class VendingMachineView {
         vendingMachineFrame.getContentPane().add(button);
     }
 
+    private void readStockCheck() throws IOException {
+        String stock = reader.readLine();
+        String[] split = stock.split(" ");
+        if (!split[0].equals("-")) {
+            stockDate.set(Integer.parseInt(split[0]), split[1]);
+        }
+    }
+
     private void readMonthlySales() throws IOException {
         String line;
         while (!(line = reader.readLine()).equals("done")) {
             String[] parts = line.split(" ");
-            System.out.println(parts[0]);
             monthlySales.put(parts[0], Integer.parseInt(parts[1].trim()));
         }
     }
@@ -198,7 +215,6 @@ public class VendingMachineView {
         String line;
         while (!(line = reader.readLine()).equals("done")) {
             String[] parts = line.split(" ");
-            System.out.println(parts[0]);
             dailySales.put(parts[0], Integer.parseInt(parts[1].trim()));
         }
     }
