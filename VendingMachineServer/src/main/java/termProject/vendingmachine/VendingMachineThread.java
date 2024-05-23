@@ -189,6 +189,8 @@ public class VendingMachineThread implements Runnable {
                         }
                 } else if (split[0].equals("collectMoney")) {   // 수금
                     readChangeMoney();
+                } else if (split[0].equals("password")) {   // 비밀번호 변경
+                    password.updatePassword(split[1]);
                 }
             }
         } catch (IOException e) {

@@ -9,7 +9,10 @@ public enum MessageTexts {
     MONEY_LACK("금액이 부족합니다."),
     PAYBACK(" 원을 반환하였습니다."),
     PAYBACK_LACK("돌려받을 금액이 없습니다."),
-    COLLECTMONEY(" 원을 수금하였습니다.");
+    COLLECTMONEY(" 원을 수금하였습니다."),
+    CHANGE_PW("비밀번호가 변경되었습니다."),
+    FAIL_SAME_PW("비밀번호가 일치하지 않습니다. 다시 입력해주세요."),
+    FAIL_CHANGE_PW("특수문자 및 숫자가 하나 이상인 8자리 이상의 비밀번호를 입력해주세요.");
 
     private String text;
 

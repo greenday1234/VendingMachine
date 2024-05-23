@@ -5,7 +5,6 @@ import socket.SocketDto;
 
 import javax.swing.*;
 import java.awt.*;
-import java.io.BufferedReader;
 import java.io.PrintWriter;
 import java.util.Map;
 
@@ -14,7 +13,6 @@ import static View.VendingMachineView.drink;
 
 public class AdminPageView {
 
-    private BufferedReader reader;
     private PrintWriter writer;
 
     private JLabel money10QuantityLabel;
@@ -27,7 +25,6 @@ public class AdminPageView {
 
     public AdminPageView(SocketDto socketDto) {
 
-        reader = socketDto.getReader();
         writer = socketDto.getWriter();
 
         // 프레임
@@ -65,17 +62,19 @@ public class AdminPageView {
 
         addCollectMoney(gbc, 15, "collectMoney");
 
-        addPWChangeButton(gbc, 15);
+        addPWChangeButton(gbc, 15, socketDto);
+
+        //addBackButton(gbc, 16);
 
         adminPageFrame.setVisible(true);
     }
 
-    private void addPWChangeButton(GridBagConstraints gbc, int row) {
-        JButton button = new JButton("비밀번호 변경");
+    private void addPWChangeButton(GridBagConstraints gbc, int row, SocketDto socketDto) {
+        JButton button = new JButton("관리자 비밀번호 변경");
         gbc.gridx = 2;
         gbc.gridy = row;
         button.addActionListener(e -> {
-            
+            AdminPWChangeView.adminPWChangeView(socketDto);
         });
         adminPageFrame.add(button, gbc);
     }

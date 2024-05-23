@@ -1,8 +1,16 @@
 package validate;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 import static View.VendingMachineView.*;
 
 public class Validation {
+
+    private static final String PASSWORD_PATTERN =
+            "^(?=.*[0-9])(?=.*[!@#$%^&*()_+\\-\\[\\]{};':\"\\\\|,.<>/?]).{8,}$";
+
+    private static final Pattern pattern = Pattern.compile(PASSWORD_PATTERN);
 
     public static void valid1000(String money) {
         if (money.equals("1000")) {
@@ -161,5 +169,12 @@ public class Validation {
             return false;
         }
         return true;
+    }
+
+    public static Boolean validPW(String password) {
+
+        Matcher matcher = pattern.matcher(password);
+
+        return matcher.matches();
     }
 }
