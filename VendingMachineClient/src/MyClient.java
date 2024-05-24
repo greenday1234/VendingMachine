@@ -11,7 +11,6 @@ public class MyClient {
     public static void main(String[] args) throws IOException {
 
         SocketDto socketDto = mySocket.connectSocket();// 소켓 연결
-
         VendingMachineView.vendingMachineView(socketDto);  // 자판기 화면 실행
 
 

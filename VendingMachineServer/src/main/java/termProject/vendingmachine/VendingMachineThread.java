@@ -4,6 +4,7 @@ import termProject.vendingmachine.domain.VendingMachine;
 import termProject.vendingmachine.login.Password;
 
 import java.io.*;
+import java.net.ServerSocket;
 import java.net.Socket;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -14,6 +15,8 @@ import static termProject.vendingmachine.domain.VendingMachine.*;
 
 public class VendingMachineThread implements Runnable {
 
+    private ServerSocket serverSocket;
+    private int PORT;
     private Socket socket;
     private static VendingMachine vendingMachine;
     private Password password;
@@ -31,142 +34,146 @@ public class VendingMachineThread implements Runnable {
     // 월별 판매 금액 데이터 생성
     private static Map<String, Integer> monthlySales = new HashMap<>();
 
-    public VendingMachineThread(Socket socket) {
-        this.socket = socket;
+    public VendingMachineThread(ServerSocket serverSocket, int PORT) throws IOException {
+        this.serverSocket = serverSocket;
+        this.PORT = PORT;
+        vendingMachine = new VendingMachine();
+        password = new Password("@1234567");
     }
 
     public void run() {
-        vendingMachine = new VendingMachine();
-        password = new Password("@1234567");
-
         try {
-            reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-            writer = new PrintWriter(socket.getOutputStream(), true);
-            dailyFileWriter = new FileWriter("./sales/dailySales.txt");
-            dailyFileReader = new FileReader("./sales/dailySales.txt");
-            monthlyFileWriter = new FileWriter("./sales/monthlySales.txt");
-            monthlyFileReader = new FileReader("./sales/monthlySales.txt");
-            dailyReader = new BufferedReader(dailyFileReader);
-            monthlyReader = new BufferedReader(monthlyFileReader);
-
-            writeQuantityList(writer);  // 초기 재고 수량 반환
-            writeChangeMoney(writer);   // 초기 거스름돈 수량 반환
-            writeStockDate(writer);     // 초기 재고 소진 일자 반환
-            writePassword(writer);  // 비밀번호 반환
-
             while (true) {
-                String clicked = reader.readLine();
-                String[] split = clicked.split(" ");
-                if (split[0].equals("drink")) { // 음료 결제
-                    switch (split[1]) {
-                        case "water":
-                            addDailySale(updateDate(), vendingMachine.getWater().getPrice());   // 전체 판매 금액 변경 일별
-                            calculateMonthlySales();    // 전체 판매 금액 월별
-                            vendingMachine.getWater().sellWater();  // 재고 수량 변경
-                            quantityList.set(0, vendingMachine.getWater().getQuantity());
-                            writeQuantityList();    // 재고 수량 반환
-                            writeStock(writer, 0);   // 재고 소진 일자 반환
-                            remainMoney -= vendingMachine.getWater().getPrice();
-                            writer.println(remainMoney);    // 입력 금액 변경 및 반환
-                            readAndWriteDailyFile();    // 일별 판매 금액 반환
-                            readAndWriteMonthlyFile();  // 월별 판매 금액 반환
-                            break;
-                        case "coffee":
-                            addDailySale(updateDate(), vendingMachine.getCoffee().getPrice());
-                            calculateMonthlySales();
-                            vendingMachine.getCoffee().sellCoffee();  // 재고 수량 변경
-                            quantityList.set(1, vendingMachine.getCoffee().getQuantity());
-                            writeQuantityList();    // 재고 수량 반환
-                            writeStock(writer, 1);   // 재고 소진 일자 반환
-                            remainMoney -= vendingMachine.getCoffee().getPrice();
-                            writer.println(remainMoney);    // 입력 금액 변경 및 반환
-                            readAndWriteDailyFile();    // 일별 판매 금액 반환
-                            readAndWriteMonthlyFile();  // 월별 판매 금액 반환
-                            break;
-                        case "sportsDrink":
-                            addDailySale(updateDate(), vendingMachine.getSportsDrink().getPrice());
-                            calculateMonthlySales();
-                            vendingMachine.getSportsDrink().sellSportsDrink();  // 재고 수량 변경
-                            quantityList.set(2, vendingMachine.getSportsDrink().getQuantity());
-                            writeQuantityList();    // 재고 수량 반환
-                            writeStock(writer, 2);   // 재고 소진 일자 반환
-                            remainMoney -= vendingMachine.getSportsDrink().getPrice();
-                            writer.println(remainMoney);    // 입력 금액 변경 및 반환
-                            readAndWriteDailyFile();    // 일별 판매 금액 반환
-                            readAndWriteMonthlyFile();  // 월별 판매 금액 반환
-                            break;
-                        case "highQualityCoffee":
-                            addDailySale(updateDate(), vendingMachine.getHighQualityCoffee().getPrice());
-                            calculateMonthlySales();
-                            vendingMachine.getHighQualityCoffee().sellHighQualityCoffee();  // 재고 수량 변경
-                            quantityList.set(3, vendingMachine.getHighQualityCoffee().getQuantity());
-                            writeQuantityList();    // 재고 수량 반환
-                            writeStock(writer, 3);   // 재고 소진 일자 반환
-                            remainMoney -= vendingMachine.getHighQualityCoffee().getPrice();
-                            writer.println(remainMoney);    // 입력 금액 변경 및 반환
-                            readAndWriteDailyFile();    // 일별 판매 금액 반환
-                            readAndWriteMonthlyFile();  // 월별 판매 금액 반환
-                            break;
-                        case "soda":
-                            addDailySale(updateDate(), vendingMachine.getSoda().getPrice());
-                            calculateMonthlySales();
-                            vendingMachine.getSoda().sellSoda();  // 재고 수량 변경
-                            quantityList.set(4, vendingMachine.getSoda().getQuantity());
-                            writeQuantityList();    // 재고 수량 반환
-                            writeStock(writer, 4);   // 재고 소진 일자 반환
-                            remainMoney -= vendingMachine.getSoda().getPrice();
-                            writer.println(remainMoney);    // 입력 금액 변경 및 반환
-                            readAndWriteDailyFile();    // 일별 판매 금액 반환
-                            readAndWriteMonthlyFile();  // 월별 판매 금액 반환
-                            break;
-                        case "specialDrink":
-                            addDailySale(updateDate(), vendingMachine.getSpecialDrink().getPrice());
-                            calculateMonthlySales();
-                            vendingMachine.getSpecialDrink().sellSpecialDrink();  // 재고 수량 변경
-                            quantityList.set(5, vendingMachine.getSpecialDrink().getQuantity());
-                            writeQuantityList();    // 재고 수량 반환
-                            writeStock(writer, 5);   // 재고 소진 일자 반환
-                            remainMoney -= vendingMachine.getSpecialDrink().getPrice();
-                            writer.println(remainMoney);    // 입력 금액 변경 및 반환
-                            readAndWriteDailyFile();    // 일별 판매 금액 반환
-                            readAndWriteMonthlyFile();  // 월별 판매 금액 반환
-                            break;
-                    }
-                } else if (split[0].equals("money")){    // 화폐 입금
-                    switch (split[1]) {
-                        case "10":
-                            vendingMachine.updateChangeMoney(0);
-                            remainMoney += 10;
-                            writer.println(remainMoney);   // 총 금액 전송
-                            break;
-                        case "50":
-                            vendingMachine.updateChangeMoney(1);
-                            remainMoney += 50;
-                            writer.println(remainMoney);   // 총 금액 전송
-                            break;
-                        case "100":
-                            vendingMachine.updateChangeMoney(2);
-                            remainMoney += 100;
-                            writer.println(remainMoney);   // 총 금액 전송
-                            break;
-                        case "500":
-                            vendingMachine.updateChangeMoney(3);
-                            remainMoney += 500;
-                            writer.println(remainMoney);   // 총 금액 전송
-                            break;
-                        case "1000":
-                            vendingMachine.updateChangeMoney(4);
-                            remainMoney += 1000;
-                            writer.println(remainMoney);   // 총 금액 전송
-                            break;
-                    }
-                } else if (split[0].equals("return")) { // 금액 반환
+                this.socket = serverSocket.accept();
+                System.out.println(PORT + "포트로 클라이언트가 연결되었습니다.");
 
-                    writer.println(remainMoney);    // 거스름돈 금액 반환
-                    returnChange();   // 거스름돈 수량 변경
-                    writeChangeMoney(writer);
+                reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+                writer = new PrintWriter(socket.getOutputStream(), true);
+                dailyFileWriter = new FileWriter("./sales" + "/" + PORT + "/dailySales.txt");
+                dailyFileReader = new FileReader("./sales" + "/" + PORT + "/dailySales.txt");
+                monthlyFileWriter = new FileWriter("./sales" + "/" + PORT + "/monthlySales.txt");
+                monthlyFileReader = new FileReader("./sales" + "/" +PORT + "/monthlySales.txt");
+                dailyReader = new BufferedReader(dailyFileReader);
+                monthlyReader = new BufferedReader(monthlyFileReader);
 
-                } else if (split[0].equals("price")) {  // 가격 변경
+                writeQuantityList(writer);  // 초기 재고 수량 반환
+                writeChangeMoney(writer);   // 초기 거스름돈 수량 반환
+                writeStockDate(writer);     // 초기 재고 소진 일자 반환
+                writePassword(writer);  // 비밀번호 반환
+
+                while (true) {
+                    String clicked = reader.readLine();
+                    String[] split = clicked.split(" ");
+                    if (split[0].equals("drink")) { // 음료 결제
+                        switch (split[1]) {
+                            case "water":
+                                addDailySale(updateDate(), vendingMachine.getWater().getPrice());   // 전체 판매 금액 변경 일별
+                                calculateMonthlySales();    // 전체 판매 금액 월별
+                                vendingMachine.getWater().sellWater();  // 재고 수량 변경
+                                quantityList.set(0, vendingMachine.getWater().getQuantity());
+                                writeQuantityList();    // 재고 수량 반환
+                                writeStock(writer, 0);   // 재고 소진 일자 반환
+                                remainMoney -= vendingMachine.getWater().getPrice();
+                                writer.println(remainMoney);    // 입력 금액 변경 및 반환
+                                readAndWriteDailyFile();    // 일별 판매 금액 반환
+                                readAndWriteMonthlyFile();  // 월별 판매 금액 반환
+                                break;
+                            case "coffee":
+                                addDailySale(updateDate(), vendingMachine.getCoffee().getPrice());
+                                calculateMonthlySales();
+                                vendingMachine.getCoffee().sellCoffee();  // 재고 수량 변경
+                                quantityList.set(1, vendingMachine.getCoffee().getQuantity());
+                                writeQuantityList();    // 재고 수량 반환
+                                writeStock(writer, 1);   // 재고 소진 일자 반환
+                                remainMoney -= vendingMachine.getCoffee().getPrice();
+                                writer.println(remainMoney);    // 입력 금액 변경 및 반환
+                                readAndWriteDailyFile();    // 일별 판매 금액 반환
+                                readAndWriteMonthlyFile();  // 월별 판매 금액 반환
+                                break;
+                            case "sportsDrink":
+                                addDailySale(updateDate(), vendingMachine.getSportsDrink().getPrice());
+                                calculateMonthlySales();
+                                vendingMachine.getSportsDrink().sellSportsDrink();  // 재고 수량 변경
+                                quantityList.set(2, vendingMachine.getSportsDrink().getQuantity());
+                                writeQuantityList();    // 재고 수량 반환
+                                writeStock(writer, 2);   // 재고 소진 일자 반환
+                                remainMoney -= vendingMachine.getSportsDrink().getPrice();
+                                writer.println(remainMoney);    // 입력 금액 변경 및 반환
+                                readAndWriteDailyFile();    // 일별 판매 금액 반환
+                                readAndWriteMonthlyFile();  // 월별 판매 금액 반환
+                                break;
+                            case "highQualityCoffee":
+                                addDailySale(updateDate(), vendingMachine.getHighQualityCoffee().getPrice());
+                                calculateMonthlySales();
+                                vendingMachine.getHighQualityCoffee().sellHighQualityCoffee();  // 재고 수량 변경
+                                quantityList.set(3, vendingMachine.getHighQualityCoffee().getQuantity());
+                                writeQuantityList();    // 재고 수량 반환
+                                writeStock(writer, 3);   // 재고 소진 일자 반환
+                                remainMoney -= vendingMachine.getHighQualityCoffee().getPrice();
+                                writer.println(remainMoney);    // 입력 금액 변경 및 반환
+                                readAndWriteDailyFile();    // 일별 판매 금액 반환
+                                readAndWriteMonthlyFile();  // 월별 판매 금액 반환
+                                break;
+                            case "soda":
+                                addDailySale(updateDate(), vendingMachine.getSoda().getPrice());
+                                calculateMonthlySales();
+                                vendingMachine.getSoda().sellSoda();  // 재고 수량 변경
+                                quantityList.set(4, vendingMachine.getSoda().getQuantity());
+                                writeQuantityList();    // 재고 수량 반환
+                                writeStock(writer, 4);   // 재고 소진 일자 반환
+                                remainMoney -= vendingMachine.getSoda().getPrice();
+                                writer.println(remainMoney);    // 입력 금액 변경 및 반환
+                                readAndWriteDailyFile();    // 일별 판매 금액 반환
+                                readAndWriteMonthlyFile();  // 월별 판매 금액 반환
+                                break;
+                            case "specialDrink":
+                                addDailySale(updateDate(), vendingMachine.getSpecialDrink().getPrice());
+                                calculateMonthlySales();
+                                vendingMachine.getSpecialDrink().sellSpecialDrink();  // 재고 수량 변경
+                                quantityList.set(5, vendingMachine.getSpecialDrink().getQuantity());
+                                writeQuantityList();    // 재고 수량 반환
+                                writeStock(writer, 5);   // 재고 소진 일자 반환
+                                remainMoney -= vendingMachine.getSpecialDrink().getPrice();
+                                writer.println(remainMoney);    // 입력 금액 변경 및 반환
+                                readAndWriteDailyFile();    // 일별 판매 금액 반환
+                                readAndWriteMonthlyFile();  // 월별 판매 금액 반환
+                                break;
+                        }
+                    } else if (split[0].equals("money")) {    // 화폐 입금
+                        switch (split[1]) {
+                            case "10":
+                                vendingMachine.updateChangeMoney(0);
+                                remainMoney += 10;
+                                writer.println(remainMoney);   // 총 금액 전송
+                                break;
+                            case "50":
+                                vendingMachine.updateChangeMoney(1);
+                                remainMoney += 50;
+                                writer.println(remainMoney);   // 총 금액 전송
+                                break;
+                            case "100":
+                                vendingMachine.updateChangeMoney(2);
+                                remainMoney += 100;
+                                writer.println(remainMoney);   // 총 금액 전송
+                                break;
+                            case "500":
+                                vendingMachine.updateChangeMoney(3);
+                                remainMoney += 500;
+                                writer.println(remainMoney);   // 총 금액 전송
+                                break;
+                            case "1000":
+                                vendingMachine.updateChangeMoney(4);
+                                remainMoney += 1000;
+                                writer.println(remainMoney);   // 총 금액 전송
+                                break;
+                        }
+                    } else if (split[0].equals("return")) { // 금액 반환
+
+                        writer.println(remainMoney);    // 거스름돈 금액 반환
+                        returnChange();   // 거스름돈 수량 변경
+                        writeChangeMoney(writer);
+
+                    } else if (split[0].equals("price")) {  // 가격 변경
                         switch (split[1]) {
                             case "water":
                                 vendingMachine.getWater().updateWaterPrice(Integer.parseInt(split[2]));
@@ -187,10 +194,11 @@ public class VendingMachineThread implements Runnable {
                                 vendingMachine.getSpecialDrink().updateSpecialDrinkPrice(Integer.parseInt(split[2]));
                                 break;
                         }
-                } else if (split[0].equals("collectMoney")) {   // 수금
-                    readChangeMoney();
-                } else if (split[0].equals("password")) {   // 비밀번호 변경
-                    password.updatePassword(split[1]);
+                    } else if (split[0].equals("collectMoney")) {   // 수금
+                        readChangeMoney();
+                    } else if (split[0].equals("password")) {   // 비밀번호 변경
+                        password.updatePassword(split[1]);
+                    }
                 }
             }
         } catch (IOException e) {

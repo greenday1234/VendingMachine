@@ -5,25 +5,23 @@ import termProject.vendingmachine.VendingMachineThread;
 
 import java.io.IOException;
 import java.net.ServerSocket;
-import java.net.Socket;
 
 @Slf4j
 public class SocketService {
 
     public void connectionSocket() {
 
-		final int PORT = 8000;
+		final int PORT1 = 8000;
+		final int PORT2 = 9000;
 
-		try (ServerSocket serverSocket = new ServerSocket(PORT)) {
+		try {
+			ServerSocket serverSocket1 = new ServerSocket(PORT1);
+			ServerSocket serverSocket2 = new ServerSocket(PORT2);
 			System.out.println("서버가 시작되었습니다.");
 
-			while (true) {
-				Socket socket = serverSocket.accept();
-				System.out.println("클라이언트가 연결되었습니다.");
+			new Thread(new VendingMachineThread(serverSocket1, PORT1)).start();
+			new Thread(new VendingMachineThread(serverSocket2, PORT2)).start();
 
-				// 클라이언트와 통신을 위한 스레드 생성
-				new Thread(new VendingMachineThread(socket)).start();	// VendingMachineThread 에서 자판기 작업 진행
-			}
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
