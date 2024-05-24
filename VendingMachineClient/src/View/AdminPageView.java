@@ -38,35 +38,47 @@ public class AdminPageView {
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.insets = new Insets(3, 3, 3, 3); // 여백 설정
 
-        money10QuantityLabel = addMoneyQuantityLabel(gbc, 0, "10");
-        money50QuantityLabel = addMoneyQuantityLabel(gbc, 1, "50");
-        money100QuantityLabel = addMoneyQuantityLabel(gbc, 2, "100");
-        money500QuantityLabel = addMoneyQuantityLabel(gbc, 3, "500");
-        money1000QuantityLabel = addMoneyQuantityLabel(gbc, 4, "1000");
+        addBackButton(gbc, 0);
 
-        addChangeDrinkNamePriceRow(gbc, 1, waterNameLabel, drink.getWaterPrice(), 0);
-        addStockTribe(gbc, 2, 0);
-        addChangeDrinkNamePriceRow(gbc, 3, coffeeNameLabel, drink.getCoffeePrice(), 1);
-        addStockTribe(gbc, 4, 1);
-        addChangeDrinkNamePriceRow(gbc, 5, sportsDrinkNameLabel, drink.getSportsDrinkPrice(), 2);
-        addStockTribe(gbc, 6, 2);
-        addChangeDrinkNamePriceRow(gbc, 7, highQualityCoffeeNameLabel, drink.getHighQualityCoffeePrice(), 3);
-        addStockTribe(gbc, 8, 3);
-        addChangeDrinkNamePriceRow(gbc, 9, sodaNameLabel, drink.getSodaPrice(), 4);
-        addStockTribe(gbc, 10, 4);
-        addChangeDrinkNamePriceRow(gbc, 11, specialDrinkNameLabel, drink.getSpecialDrinkPrice(), 5);
-        addStockTribe(gbc, 12, 5);
+        money10QuantityLabel = addMoneyQuantityLabel(gbc, 0, 1, "10");
+        money50QuantityLabel = addMoneyQuantityLabel(gbc, 1, 1, "50");
+        money100QuantityLabel = addMoneyQuantityLabel(gbc, 2, 1, "100");
+        money500QuantityLabel = addMoneyQuantityLabel(gbc, 3, 1, "500");
+        money1000QuantityLabel = addMoneyQuantityLabel(gbc, 4, 1, "1000");
 
-        addDailySales(gbc, 13);
-        addMonthlySales(gbc, 14);
+        addChangeDrinkNamePriceRow(gbc, 2, waterNameLabel, drink.getWaterPrice(), 0);
+        addStockTribe(gbc, 3, 0);
+        addChangeDrinkNamePriceRow(gbc, 4, coffeeNameLabel, drink.getCoffeePrice(), 1);
+        addStockTribe(gbc, 5, 1);
+        addChangeDrinkNamePriceRow(gbc, 6, sportsDrinkNameLabel, drink.getSportsDrinkPrice(), 2);
+        addStockTribe(gbc, 7, 2);
+        addChangeDrinkNamePriceRow(gbc, 8, highQualityCoffeeNameLabel, drink.getHighQualityCoffeePrice(), 3);
+        addStockTribe(gbc, 9, 3);
+        addChangeDrinkNamePriceRow(gbc, 10, sodaNameLabel, drink.getSodaPrice(), 4);
+        addStockTribe(gbc, 11, 4);
+        addChangeDrinkNamePriceRow(gbc, 12, specialDrinkNameLabel, drink.getSpecialDrinkPrice(), 5);
+        addStockTribe(gbc, 13, 5);
 
-        addCollectMoney(gbc, 15, "collectMoney");
+        addDailySales(gbc, 14);
+        addMonthlySales(gbc, 15);
 
-        addPWChangeButton(gbc, 15, socketDto);
+        addCollectMoney(gbc, 16, "collectMoney");
 
-        //addBackButton(gbc, 16);
+        addPWChangeButton(gbc, 16, socketDto);
 
         adminPageFrame.setVisible(true);
+    }
+
+    private void addBackButton(GridBagConstraints gbc, int row) {
+        JButton button = new JButton("창 닫기");
+        button.setPreferredSize(new Dimension(50, 40));
+        gbc.gridy = row;
+        gbc.anchor = GridBagConstraints.WEST;
+        button.addActionListener(e -> {
+            adminPageFrame.setVisible(false);
+            vendingMachineFrame.setVisible(true);
+        });
+        adminPageFrame.add(button, gbc);
     }
 
     private void addPWChangeButton(GridBagConstraints gbc, int row, SocketDto socketDto) {
@@ -269,13 +281,13 @@ public class AdminPageView {
         }
     }
 
-    private JLabel addMoneyQuantityLabel(GridBagConstraints gbc, int index, String text) {
+    private JLabel addMoneyQuantityLabel(GridBagConstraints gbc, int index, int row, String text) {
         JLabel label = new JLabel(text + " 원 " + changeMoney.get(index) + " 개", SwingConstants.CENTER);
         Font font = label.getFont();
         label.setFont(font.deriveFont(Font.PLAIN, 15));
         label.setPreferredSize(new Dimension(130, 50));
         gbc.gridx = index;
-        gbc.gridy = 0;
+        gbc.gridy = row;
         adminPageFrame.add(label, gbc);
         return label;
     }
