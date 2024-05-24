@@ -54,11 +54,11 @@ public class AdminPWChangeView {
         gbc.gridy = row;
         button.addActionListener(e -> {
             if (passwordTextField.getText().equals(password.getPassword())) {
-                if (!Validation.validPW(passwordChangeTextField.getPassword().toString())) {
+                if (!Validation.validPW(passwordChangeTextField.getText())) {
                     JOptionPane.showMessageDialog(adminPWChangeFrame, MessageTexts.FAIL_CHANGE_PW.getText());
                     return;
                 }
-                password.updatePassword(passwordChangeTextField.getPassword().toString());
+                password.updatePassword(passwordChangeTextField.getText());
                 writer.println("password " + password.getPassword());
                 JOptionPane.showMessageDialog(adminPWChangeFrame, MessageTexts.CHANGE_PW.getText());
                 adminPWChangeFrame.setVisible(false);
