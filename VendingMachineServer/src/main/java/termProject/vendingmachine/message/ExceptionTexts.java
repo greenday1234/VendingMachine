@@ -5,7 +5,7 @@ import lombok.Getter;
 @Getter
 public enum ExceptionTexts {
 
-    OVER_MONEY("금액이 너무 큽니다.");
+    SOCKET_FAIL("소켓 연결에 실패했습니다.");
 
     private String text;
 

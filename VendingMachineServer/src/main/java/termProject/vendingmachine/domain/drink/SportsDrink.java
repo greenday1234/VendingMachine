@@ -3,7 +3,7 @@ package termProject.vendingmachine.domain.drink;
 import lombok.Getter;
 
 @Getter
-public class SportsDrink {
+public class SportsDrink implements Drink {
 
     private int price;
     private int quantity;
@@ -13,11 +13,13 @@ public class SportsDrink {
         this.quantity = 10;
     }
 
-    public void sellSportsDrink() {
-        this.quantity --;
+    @Override
+    public void sellDrink() {
+        this.quantity--;
     }
 
-    public void updateSportsDrinkPrice(int price) {
+    @Override
+    public void updatePrice(int price) {
         this.price = price;
     }
 }

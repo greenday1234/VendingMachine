@@ -2,6 +2,7 @@ package termProject.vendingmachine.service;
 
 import lombok.extern.slf4j.Slf4j;
 import termProject.vendingmachine.VendingMachineThread;
+import termProject.vendingmachine.message.ExceptionTexts;
 
 import java.io.IOException;
 import java.net.ServerSocket;
@@ -23,7 +24,7 @@ public class SocketService {
 			new Thread(new VendingMachineThread(serverSocket2, PORT2)).start();
 
 		} catch (IOException e) {
-			e.printStackTrace();
+			log.error(ExceptionTexts.SOCKET_FAIL.getText());
 		}
 	}
 }

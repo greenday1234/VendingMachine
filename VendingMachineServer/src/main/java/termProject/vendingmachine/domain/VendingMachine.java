@@ -10,6 +10,7 @@ import java.util.List;
 public class VendingMachine {
 
     public static final List<Integer> COIN_VALUES = new ArrayList<>(List.of(10, 50, 100, 500, 1000));
+    public static final List<Drink> DRINK_LIST = new ArrayList<>();
 
     public static List<Integer> changeMoney;
     public static List<Integer> quantityList;
@@ -18,8 +19,8 @@ public class VendingMachine {
     private Water water;
     private Coffee coffee;
     private SportsDrink sportsDrink;
-    private Soda soda;
     private HighQualityCoffee highQualityCoffee;
+    private Soda soda;
     private SpecialDrink specialDrink;
 
     public VendingMachine() {
@@ -35,6 +36,17 @@ public class VendingMachine {
         changeMoney = new ArrayList<>();
         changeMoneyInit();
         remainMoney = 0;
+
+        drinkListInit();
+    }
+
+    private void drinkListInit() {
+        DRINK_LIST.add(water);
+        DRINK_LIST.add(coffee);
+        DRINK_LIST.add(sportsDrink);
+        DRINK_LIST.add(highQualityCoffee);
+        DRINK_LIST.add(soda);
+        DRINK_LIST.add(specialDrink);
     }
 
     /**
