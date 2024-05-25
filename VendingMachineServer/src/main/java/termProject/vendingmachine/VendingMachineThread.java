@@ -41,8 +41,8 @@ public class VendingMachineThread implements Runnable {
     // 월별 판매 금액 데이터 생성
     public static Map<String, Integer> monthlySales = new HashMap<>();
 
-    public VendingMachineThread(ServerSocket serverSocket, int PORT) throws IOException {
-        this.serverSocket = serverSocket;
+    public VendingMachineThread(Socket socket, int PORT) throws IOException {
+        this.socket = socket;
         this.PORT = PORT;
         vendingMachine = new VendingMachine();
         password = new Password("@1234567");
@@ -50,10 +50,6 @@ public class VendingMachineThread implements Runnable {
 
     public void run() {
         try {
-            while (true) {
-                this.socket = serverSocket.accept();
-                System.out.println(PORT + "포트로 클라이언트가 연결되었습니다.");
-
                 socketConfig(PORT); // socket 을 사용해 파일 및 Reader, Writer 설정
                 initWrite();    // 클라이언트에 전송할 초기 데이터
 
@@ -71,11 +67,13 @@ public class VendingMachineThread implements Runnable {
                         readChangeMoney();  // 수금하기
                     } else if (clicked[0].equals("password")) {
                         password.updatePassword(clicked[1]);  // 비밀번호 변경
+                    } else {
+                        break;
                     }
                 }
-            }
+                socket.close();
         } catch (IOException e) {
-            log.error(ExceptionTexts.SOCKET_FAIL.getText());
+            log.error(ExceptionTexts.EXCEPTION.getText(), e);
         }
     }
 

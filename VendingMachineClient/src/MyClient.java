@@ -12,8 +12,5 @@ public class MyClient {
 
         SocketDto socketDto = mySocket.connectSocket();// 소켓 연결
         VendingMachineView.vendingMachineView(socketDto);  // 자판기 화면 실행
-
-
-
     }
 }

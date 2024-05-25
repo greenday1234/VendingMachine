@@ -6,7 +6,7 @@ import java.net.Socket;
 public class MySocket {
 
     private final String SERVER_ADDRESS = "172.30.1.86";
-    private final int PORT = 9000;
+    private final int PORT = 8000;
 
     public SocketDto connectSocket() {
         try {
@@ -16,8 +16,7 @@ public class MySocket {
             PrintWriter writer = new PrintWriter(socket.getOutputStream(), true);
 
             return new SocketDto(reader, writer, socket);
-        } catch (
-                IOException e) {
+        } catch (IOException e) {
             e.printStackTrace();
             return null;
         }

@@ -59,7 +59,6 @@ public class VendingMachineView {
     public VendingMachineView(SocketDto socketDto) throws IOException {
 
         socket = socketDto.getSocket();
-
         reader = socketDto.getReader();
         writer = socketDto.getWriter();
 
