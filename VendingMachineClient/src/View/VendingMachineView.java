@@ -1,6 +1,7 @@
 package View;
 
 import login.Password;
+import message.ExceptionTexts;
 import message.MessageTexts;
 import domain.Drink;
 import socket.SocketDto;
@@ -118,7 +119,29 @@ public class VendingMachineView {
 
         addAdminButton(socketDto);
 
+        disConnectButton();
+
         vendingMachineFrame.setVisible(true);
+    }
+
+    private void disConnectButton() {
+        JButton button = new JButton("자판기 종료");
+        button.setPreferredSize(new Dimension(100, 50));
+        button.addActionListener(e -> {
+            writer.println("exit");
+                vendingMachineFrame.setVisible(false);
+                disConnectSocket();
+        });
+        vendingMachineFrame.add(button);
+    }
+
+    private void disConnectSocket() {
+        try {
+            socket.close();
+            System.exit(0);
+        } catch (IOException e) {
+            throw new RuntimeException(ExceptionTexts.SOCKET_DISCONNECTION_FAIL.getText(), e);
+        }
     }
 
     private JLabel addNameLabel(String text) {
@@ -411,7 +434,6 @@ public class VendingMachineView {
             @Override
             public void actionPerformed(ActionEvent e) {
                 AdminLoginView.adminLoginView(socketDto);
-
             }
         });
         vendingMachineFrame.getContentPane().add(button);

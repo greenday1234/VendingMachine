@@ -1,9 +1,11 @@
 package termProject.vendingmachine;
 
 import lombok.extern.slf4j.Slf4j;
+import org.apache.logging.log4j.message.Message;
 import termProject.vendingmachine.domain.VendingMachine;
 import termProject.vendingmachine.login.Password;
 import termProject.vendingmachine.message.ExceptionTexts;
+import termProject.vendingmachine.message.MessageTexts;
 
 import java.io.*;
 import java.net.ServerSocket;
@@ -67,11 +69,12 @@ public class VendingMachineThread implements Runnable {
                         readChangeMoney();  // 수금하기
                     } else if (clicked[0].equals("password")) {
                         password.updatePassword(clicked[1]);  // 비밀번호 변경
-                    } else {
+                    } else {    // exit
                         break;
                     }
                 }
-                socket.close();
+                socket.close(); // 소켓 연결 종료
+                log.info(MessageTexts.SOCKET_DISCONNECT.getText(), PORT);
         } catch (IOException e) {
             log.error(ExceptionTexts.EXCEPTION.getText(), e);
         }
