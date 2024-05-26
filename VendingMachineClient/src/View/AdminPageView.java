@@ -10,6 +10,7 @@ import java.util.Map;
 
 import static View.VendingMachineView.*;
 import static View.VendingMachineView.drink;
+import static View.label.LabelService.*;
 
 public class AdminPageView {
 
@@ -46,17 +47,17 @@ public class AdminPageView {
         money500QuantityLabel = addMoneyQuantityLabel(gbc, 3, 1, "500");
         money1000QuantityLabel = addMoneyQuantityLabel(gbc, 4, 1, "1000");
 
-        addChangeDrinkNamePriceRow(gbc, 2, waterNameLabel, drink.getWaterPrice(), 0);
+        addChangeDrinkNamePriceRow(gbc, 2, waterNameLabel, DRINK_LIST.get(0).getDrinkPrice(), 0);
         addStockTribe(gbc, 3, 0);
-        addChangeDrinkNamePriceRow(gbc, 4, coffeeNameLabel, drink.getCoffeePrice(), 1);
+        addChangeDrinkNamePriceRow(gbc, 4, coffeeNameLabel, DRINK_LIST.get(1).getDrinkPrice(), 1);
         addStockTribe(gbc, 5, 1);
-        addChangeDrinkNamePriceRow(gbc, 6, sportsDrinkNameLabel, drink.getSportsDrinkPrice(), 2);
+        addChangeDrinkNamePriceRow(gbc, 6, sportsDrinkNameLabel, DRINK_LIST.get(2).getDrinkPrice(), 2);
         addStockTribe(gbc, 7, 2);
-        addChangeDrinkNamePriceRow(gbc, 8, highQualityCoffeeNameLabel, drink.getHighQualityCoffeePrice(), 3);
+        addChangeDrinkNamePriceRow(gbc, 8, highQualityCoffeeNameLabel, DRINK_LIST.get(3).getDrinkPrice(), 3);
         addStockTribe(gbc, 9, 3);
-        addChangeDrinkNamePriceRow(gbc, 10, sodaNameLabel, drink.getSodaPrice(), 4);
+        addChangeDrinkNamePriceRow(gbc, 10, sodaNameLabel, DRINK_LIST.get(4).getDrinkPrice(), 4);
         addStockTribe(gbc, 11, 4);
-        addChangeDrinkNamePriceRow(gbc, 12, specialDrinkNameLabel, drink.getSpecialDrinkPrice(), 5);
+        addChangeDrinkNamePriceRow(gbc, 12, specialDrinkNameLabel, DRINK_LIST.get(5).getDrinkPrice(), 5);
         addStockTribe(gbc, 13, 5);
 
         addDailySales(gbc, 14);
@@ -237,46 +238,46 @@ public class AdminPageView {
     private void checkIndex(int index, JLabel nameLabel, JLabel priceLabel, JTextField nameTextField, JTextField priceTextField) {
         switch (index) {
             case 0:
-                drink.setWater(nameTextField.getText());    // 이름 변경
-                nameLabel.setText(drink.getWater());
-                drink.setWaterPrice(Integer.parseInt(priceTextField.getText()));    // 가격 변경
-                writer.println("price water " + drink.getWaterPrice());  // 가격 서버에 전송
-                priceLabel.setText(drink.getWaterPrice() + " 원");
+                DRINK_LIST.get(index).setDrinkName(nameTextField.getText());    // 이름 변경
+                nameLabel.setText(DRINK_LIST.get(index).getDrinkName());
+                DRINK_LIST.get(index).setDrinkPrice(Integer.parseInt(priceTextField.getText()));    // 가격 변경
+                writer.println("price water " + DRINK_LIST.get(index).getDrinkPrice());  // 가격 서버에 전송
+                priceLabel.setText(DRINK_LIST.get(index).getDrinkPrice() + " 원");
                 break;
             case 1:
-                drink.setCoffee(nameTextField.getText());    // 이름 변경
-                nameLabel.setText(drink.getCoffee());
-                drink.setCoffeePrice(Integer.parseInt(priceTextField.getText()));    // 가격 변경
-                writer.println("price coffee " + drink.getCoffeePrice());  // 가격 서버에 전송
-                priceLabel.setText(drink.getCoffeePrice() + " 원");
+                DRINK_LIST.get(index).setDrinkName(nameTextField.getText());    // 이름 변경
+                nameLabel.setText(DRINK_LIST.get(index).getDrinkName());
+                DRINK_LIST.get(index).setDrinkPrice(Integer.parseInt(priceTextField.getText()));    // 가격 변경
+                writer.println("price coffee " + DRINK_LIST.get(index).getDrinkPrice());  // 가격 서버에 전송
+                priceLabel.setText(DRINK_LIST.get(index).getDrinkPrice() + " 원");
                 break;
             case 2:
-                drink.setSportsDrink(nameTextField.getText());    // 이름 변경
-                nameLabel.setText(drink.getSportsDrink());
-                drink.setSportsDrinkPrice(Integer.parseInt(priceTextField.getText()));    // 가격 변경
-                writer.println("price sportsDrink " + drink.getSportsDrinkPrice());  // 가격 서버에 전송
-                priceLabel.setText(drink.getSportsDrinkPrice() + " 원");
+                DRINK_LIST.get(index).setDrinkName(nameTextField.getText());    // 이름 변경
+                nameLabel.setText(DRINK_LIST.get(index).getDrinkName());
+                DRINK_LIST.get(index).setDrinkPrice(Integer.parseInt(priceTextField.getText()));    // 가격 변경
+                writer.println("price sportsDrink " + DRINK_LIST.get(index).getDrinkPrice());  // 가격 서버에 전송
+                priceLabel.setText(DRINK_LIST.get(index).getDrinkPrice() + " 원");
                 break;
             case 3:
-                drink.setHighQualityCoffee(nameTextField.getText());    // 이름 변경
-                nameLabel.setText(drink.getHighQualityCoffee());
-                drink.setHighQualityCoffeePrice(Integer.parseInt(priceTextField.getText()));    // 가격 변경
-                writer.println("price highQualityCoffee " + drink.getHighQualityCoffeePrice());  // 가격 서버에 전송
-                priceLabel.setText(drink.getHighQualityCoffeePrice() + " 원");
+                DRINK_LIST.get(index).setDrinkName(nameTextField.getText());    // 이름 변경
+                nameLabel.setText(DRINK_LIST.get(index).getDrinkName());
+                DRINK_LIST.get(index).setDrinkPrice(Integer.parseInt(priceTextField.getText()));    // 가격 변경
+                writer.println("price highQualityCoffee " + DRINK_LIST.get(index).getDrinkPrice());  // 가격 서버에 전송
+                priceLabel.setText(DRINK_LIST.get(index).getDrinkPrice() + " 원");
                 break;
             case 4:
-                drink.setSoda(nameTextField.getText());    // 이름 변경
-                nameLabel.setText(drink.getSoda());
-                drink.setSodaPrice(Integer.parseInt(priceTextField.getText()));    // 가격 변경
-                writer.println("price soda " + drink.getSodaPrice());  // 가격 서버에 전송
-                priceLabel.setText(drink.getSodaPrice() + " 원");
+                DRINK_LIST.get(index).setDrinkName(nameTextField.getText());    // 이름 변경
+                nameLabel.setText(DRINK_LIST.get(index).getDrinkName());
+                DRINK_LIST.get(index).setDrinkPrice(Integer.parseInt(priceTextField.getText()));    // 가격 변경
+                writer.println("price soda " + DRINK_LIST.get(index).getDrinkPrice());  // 가격 서버에 전송
+                priceLabel.setText(DRINK_LIST.get(index).getDrinkPrice() + " 원");
                 break;
             case 5:
-                drink.setSpecialDrink(nameTextField.getText());    // 이름 변경
-                nameLabel.setText(drink.getSpecialDrink());
-                drink.setSpecialDrinkPrice(Integer.parseInt(priceTextField.getText()));    // 가격 변경
-                writer.println("price specialDrink " + drink.getSpecialDrinkPrice());  // 가격 서버에 전송
-                priceLabel.setText(drink.getSpecialDrinkPrice() + " 원");
+                DRINK_LIST.get(index).setDrinkName(nameTextField.getText());    // 이름 변경
+                nameLabel.setText(DRINK_LIST.get(index).getDrinkName());
+                DRINK_LIST.get(index).setDrinkPrice(Integer.parseInt(priceTextField.getText()));    // 가격 변경
+                writer.println("price specialDrink " + DRINK_LIST.get(index).getDrinkPrice());  // 가격 서버에 전송
+                priceLabel.setText(DRINK_LIST.get(index).getDrinkPrice() + " 원");
                 break;
         }
     }
