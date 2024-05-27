@@ -1,14 +1,12 @@
 package termProject.vendingmachine;
 
 import lombok.extern.slf4j.Slf4j;
-import org.apache.logging.log4j.message.Message;
 import termProject.vendingmachine.domain.VendingMachine;
 import termProject.vendingmachine.login.Password;
 import termProject.vendingmachine.message.ExceptionTexts;
 import termProject.vendingmachine.message.MessageTexts;
 
 import java.io.*;
-import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.*;
 
@@ -23,7 +21,6 @@ import static termProject.vendingmachine.util.Write.*;
 @Slf4j
 public class VendingMachineThread implements Runnable {
 
-    public ServerSocket serverSocket;
     public int PORT;
     public static Socket socket;
     public static BufferedReader reader;

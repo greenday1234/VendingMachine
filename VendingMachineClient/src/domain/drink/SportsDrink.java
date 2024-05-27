@@ -38,7 +38,7 @@ public class SportsDrink implements Drink {
     }
 
     @Override
-    public void sellDrink() {
-        this.quantity--;
+    public void setDrinkQuantity(int quantity) {
+        this.quantity = quantity;
     }
 }

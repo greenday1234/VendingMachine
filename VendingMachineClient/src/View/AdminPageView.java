@@ -9,8 +9,10 @@ import java.io.PrintWriter;
 import java.util.Map;
 
 import static View.VendingMachineView.*;
-import static View.VendingMachineView.drink;
+import static View.frame.FrameService.vendingMachineFrame;
 import static View.label.LabelService.*;
+import static util.Util.COIN_VALUES;
+import static util.Util.DRINK_LIST;
 
 public class AdminPageView {
 
@@ -47,17 +49,17 @@ public class AdminPageView {
         money500QuantityLabel = addMoneyQuantityLabel(gbc, 3, 1, "500");
         money1000QuantityLabel = addMoneyQuantityLabel(gbc, 4, 1, "1000");
 
-        addChangeDrinkNamePriceRow(gbc, 2, waterNameLabel, DRINK_LIST.get(0).getDrinkPrice(), 0);
+        addChangeDrinkNamePriceRow(gbc, 2, DRINK_NAME_LABEL.get(0), DRINK_LIST.get(0).getDrinkPrice(), 0);
         addStockTribe(gbc, 3, 0);
-        addChangeDrinkNamePriceRow(gbc, 4, coffeeNameLabel, DRINK_LIST.get(1).getDrinkPrice(), 1);
+        addChangeDrinkNamePriceRow(gbc, 4, DRINK_NAME_LABEL.get(1), DRINK_LIST.get(1).getDrinkPrice(), 1);
         addStockTribe(gbc, 5, 1);
-        addChangeDrinkNamePriceRow(gbc, 6, sportsDrinkNameLabel, DRINK_LIST.get(2).getDrinkPrice(), 2);
+        addChangeDrinkNamePriceRow(gbc, 6, DRINK_NAME_LABEL.get(2), DRINK_LIST.get(2).getDrinkPrice(), 2);
         addStockTribe(gbc, 7, 2);
-        addChangeDrinkNamePriceRow(gbc, 8, highQualityCoffeeNameLabel, DRINK_LIST.get(3).getDrinkPrice(), 3);
+        addChangeDrinkNamePriceRow(gbc, 8, DRINK_NAME_LABEL.get(3), DRINK_LIST.get(3).getDrinkPrice(), 3);
         addStockTribe(gbc, 9, 3);
-        addChangeDrinkNamePriceRow(gbc, 10, sodaNameLabel, DRINK_LIST.get(4).getDrinkPrice(), 4);
+        addChangeDrinkNamePriceRow(gbc, 10, DRINK_NAME_LABEL.get(4), DRINK_LIST.get(4).getDrinkPrice(), 4);
         addStockTribe(gbc, 11, 4);
-        addChangeDrinkNamePriceRow(gbc, 12, specialDrinkNameLabel, DRINK_LIST.get(5).getDrinkPrice(), 5);
+        addChangeDrinkNamePriceRow(gbc, 12, DRINK_NAME_LABEL.get(5), DRINK_LIST.get(5).getDrinkPrice(), 5);
         addStockTribe(gbc, 13, 5);
 
         addDailySales(gbc, 14);

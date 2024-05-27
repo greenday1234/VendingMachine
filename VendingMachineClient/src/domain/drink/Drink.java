@@ -8,5 +8,5 @@ public interface Drink {
 
     void setDrinkName(String name);
     void setDrinkPrice(int price);
-    void sellDrink();
+    void setDrinkQuantity(int quantity);
 }

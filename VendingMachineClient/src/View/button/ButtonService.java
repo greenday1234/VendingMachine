@@ -1,6 +1,7 @@
 package View.button;
 
 import View.AdminLoginView;
+import View.AdminPageView;
 import View.label.LabelService;
 import message.MessageTexts;
 import socket.SocketDto;
@@ -9,11 +10,12 @@ import validate.Validation;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.io.IOException;
 
 import static View.VendingMachineView.*;
+import static View.field.FieldService.passwordField;
+import static View.frame.FrameService.adminLoginFrame;
+import static View.frame.FrameService.vendingMachineFrame;
 import static View.label.LabelService.payMoneyLabel;
 import static util.Util.*;
 
@@ -131,5 +133,21 @@ public class ButtonService {
             disConnectSocket();
         });
         vendingMachineFrame.add(button);
+    }
+
+    public void addLoginButton(SocketDto socketDto) {
+        JButton loginButton = new JButton("Login");
+        loginButton.setPreferredSize(new Dimension(100, 50));
+
+        loginButton.addActionListener(e -> {
+            if (passwordField.getText().equals(password.getPassword())) {
+                vendingMachineFrame.setVisible(false);
+                adminLoginFrame.setVisible(false);
+                AdminPageView.adminPageView(socketDto);
+            } else {
+                JOptionPane.showMessageDialog(adminLoginFrame, MessageTexts.PASSWORD_ERROR.getText());
+            }
+        });
+        adminLoginFrame.getContentPane().add(loginButton);
     }
 }

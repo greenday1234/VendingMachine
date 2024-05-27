@@ -7,62 +7,18 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static View.VendingMachineView.*;
+import static View.frame.FrameService.adminLoginFrame;
+import static View.frame.FrameService.vendingMachineFrame;
+import static util.Util.DRINK;
+import static util.Util.DRINK_LIST;
 
 public class LabelService {
 
-    public static java.util.List<JLabel> DRINK_NAME_LABEL = new ArrayList<>();
-    public static java.util.List<JLabel> DRINK_QUANTITY_LABEL = new ArrayList<>();
-    public static List<JLabel> DRINK_PRICE_LABEL = new ArrayList<>();
-
-    public static JLabel waterPriceLabel;
-    public static JLabel coffeePriceLabel;
-    public static JLabel sportsDrinkPriceLabel;
-    public static JLabel highQualityCoffeePriceLabel;
-    public static JLabel sodaPriceLabel;
-    public static JLabel specialDrinkPriceLabel;
-
-    public static JLabel waterQuantityLabel;
-    public static JLabel coffeeQuantityLabel;
-    public static JLabel sportsDrinkQuantityLabel;
-    public static JLabel highQualityCoffeeQuantityLabel;
-    public static JLabel sodaQuantityLabel;
-    public static JLabel specialDrinkQuantityLabel;
+    public static final List<JLabel> DRINK_NAME_LABEL = new ArrayList<>();
+    public static final List<JLabel> DRINK_QUANTITY_LABEL = new ArrayList<>();
+    public static final List<JLabel> DRINK_PRICE_LABEL = new ArrayList<>();
 
     public static JLabel payMoneyLabel;
-
-    public static JLabel waterNameLabel;
-    public static JLabel coffeeNameLabel;
-    public static JLabel sportsDrinkNameLabel;
-    public static JLabel highQualityCoffeeNameLabel;
-    public static JLabel sodaNameLabel;
-    public static JLabel specialDrinkNameLabel;
-
-    public void drinkQuantityInit() {
-        DRINK_QUANTITY_LABEL.add(waterQuantityLabel);
-        DRINK_QUANTITY_LABEL.add(coffeeQuantityLabel);
-        DRINK_QUANTITY_LABEL.add(sportsDrinkQuantityLabel);
-        DRINK_QUANTITY_LABEL.add(highQualityCoffeeQuantityLabel);
-        DRINK_QUANTITY_LABEL.add(sodaQuantityLabel);
-        DRINK_QUANTITY_LABEL.add(specialDrinkQuantityLabel);
-    }
-
-    public void drinkPriceInit() {
-        DRINK_PRICE_LABEL.add(waterPriceLabel);
-        DRINK_PRICE_LABEL.add(coffeePriceLabel);
-        DRINK_PRICE_LABEL.add(sportsDrinkPriceLabel);
-        DRINK_PRICE_LABEL.add(highQualityCoffeePriceLabel);
-        DRINK_PRICE_LABEL.add(sodaPriceLabel);
-        DRINK_PRICE_LABEL.add(specialDrinkPriceLabel);
-    }
-
-    public void drinkNameLabelInit() {
-        DRINK_NAME_LABEL.add(waterNameLabel);
-        DRINK_NAME_LABEL.add(coffeeNameLabel);
-        DRINK_NAME_LABEL.add(sportsDrinkNameLabel);
-        DRINK_NAME_LABEL.add(highQualityCoffeeNameLabel);
-        DRINK_NAME_LABEL.add(sodaNameLabel);
-        DRINK_NAME_LABEL.add(specialDrinkNameLabel);
-    }
 
     public void addMoneyLabel() {
         payMoneyLabel = new JLabel(allPayMoney + " 원", SwingConstants.CENTER);
@@ -72,13 +28,13 @@ public class LabelService {
         vendingMachineFrame.getContentPane().add(payMoneyLabel);
     }
 
-    public JLabel addNameLabel(JLabel nameLabel, String text) {
-        nameLabel = new JLabel(text, SwingConstants.CENTER);
-        Font font = nameLabel.getFont();
-        nameLabel.setFont(font.deriveFont(Font.PLAIN, 20));
-        nameLabel.setPreferredSize(new Dimension(100, 50));
-        vendingMachineFrame.getContentPane().add(nameLabel);
-        return nameLabel;
+    public JLabel addNameLabel(String text) {
+        JLabel label = new JLabel(text, SwingConstants.CENTER);
+        Font font = label.getFont();
+        label.setFont(font.deriveFont(Font.PLAIN, 20));
+        label.setPreferredSize(new Dimension(100, 50));
+        vendingMachineFrame.getContentPane().add(label);
+        return label;
     }
 
     public JLabel addQuantityLabel(int index) {
@@ -100,36 +56,22 @@ public class LabelService {
         return label;
     }
 
-    /**
-     * 변경해야 함!!!!
-     */
     public void checkTextLabel(String text) {
-        switch (text) {
-            case "water":
-                waterQuantityLabel.setText(quantityList.get(0) + " 개");
-                JOptionPane.showMessageDialog(vendingMachineFrame, DRINK_LIST.get(0).getDrinkName() + " 을 구매하셨습니다.");
-                break;
-            case "coffee":
-                coffeeQuantityLabel.setText(quantityList.get(1) + " 개");
-                JOptionPane.showMessageDialog(vendingMachineFrame, DRINK_LIST.get(1).getDrinkName() + " 을 구매하셨습니다.");
-                break;
-            case "sportsDrink":
-                sportsDrinkQuantityLabel.setText(quantityList.get(2) + " 개");
-                JOptionPane.showMessageDialog(vendingMachineFrame, DRINK_LIST.get(2).getDrinkName() + " 을 구매하셨습니다.");
-                break;
-            case "highQualityCoffee":
-                highQualityCoffeeQuantityLabel.setText(quantityList.get(3) + " 개");
-                JOptionPane.showMessageDialog(vendingMachineFrame, DRINK_LIST.get(3).getDrinkName() + " 을 구매하셨습니다.");
-                break;
-            case "soda":
-                sodaQuantityLabel.setText(quantityList.get(4) + " 개");
-                JOptionPane.showMessageDialog(vendingMachineFrame, DRINK_LIST.get(4).getDrinkName() + " 을 구매하셨습니다.");
-                break;
-            case "specialDrink":
-                specialDrinkQuantityLabel.setText(quantityList.get(5) + " 개");
-                JOptionPane.showMessageDialog(vendingMachineFrame, DRINK_LIST.get(5).getDrinkName() + " 을 구매하셨습니다.");
-                break;
-
+        for (int i = 0; i < DRINK.size(); i++) {
+            if (text.equals(DRINK.get(i))) {
+                DRINK_QUANTITY_LABEL.get(i).setText(DRINK_LIST.get(i).getQuantity() + " 개");
+                JOptionPane.showMessageDialog(vendingMachineFrame, DRINK_LIST.get(i).getDrinkName() + " 을 구매하셨습니다.");
+                return;
+            }
         }
+    }
+
+    public void addPWLabel() {
+        JLabel passwordLabel = new JLabel("PW", SwingConstants.CENTER);
+        Font font = passwordLabel.getFont();
+        passwordLabel.setFont(font.deriveFont(Font.PLAIN, 20));
+        passwordLabel.setPreferredSize(new Dimension(100, 50));
+        passwordLabel.setForeground(Color.RED); // 글자 색상 설정
+        adminLoginFrame.getContentPane().add(passwordLabel);
     }
 }

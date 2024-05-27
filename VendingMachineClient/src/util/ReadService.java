@@ -3,6 +3,7 @@ package util;
 import java.io.IOException;
 
 import static View.VendingMachineView.*;
+import static util.Util.DRINK_LIST;
 
 public class ReadService {
 
@@ -33,7 +34,7 @@ public class ReadService {
     public void readUpdateQuantity() throws IOException {
         for (int i = 0; i < 6; i++) {
             String quantity = reader.readLine();
-            quantityList.set(i, Integer.parseInt(quantity));
+            DRINK_LIST.get(i).setDrinkQuantity(Integer.parseInt(quantity));
         }
     }
 

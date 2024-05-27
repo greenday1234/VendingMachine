@@ -14,6 +14,8 @@ import static View.label.LabelService.*;
 public class Util {
 
     public static final List<String> DRINK = new ArrayList<>(List.of("water", "coffee", "sportsDrink", "highQualityCoffee", "soda", "specialDrink"));
+    public static List<Drink> DRINK_LIST = new ArrayList<>();
+    public static final List<Integer> COIN_VALUES = new ArrayList<>(List.of(10, 50, 100, 500, 1000));
 
     public static void initProcess() throws IOException {
         quantityListInit(); // 재고 수량 초기화
@@ -78,34 +80,34 @@ public class Util {
 
     public static void payMoneyCheck() {
         if (allPayMoney >= 450) {
-            waterPriceLabel.setForeground(Color.GREEN);
+            DRINK_PRICE_LABEL.get(0).setForeground(Color.GREEN);
         } else {
-            waterPriceLabel.setForeground(Color.RED);
+            DRINK_PRICE_LABEL.get(0).setForeground(Color.RED);
         }
         if (allPayMoney >= 500) {
-            coffeePriceLabel.setForeground(Color.GREEN);
+            DRINK_PRICE_LABEL.get(1).setForeground(Color.GREEN);
         } else {
-            coffeePriceLabel.setForeground(Color.RED);
+            DRINK_PRICE_LABEL.get(1).setForeground(Color.RED);
         }
         if (allPayMoney >= 550 ) {
-            sportsDrinkPriceLabel.setForeground(Color.GREEN);
+            DRINK_PRICE_LABEL.get(2).setForeground(Color.GREEN);
         } else {
-            sportsDrinkPriceLabel.setForeground(Color.RED);
+            DRINK_PRICE_LABEL.get(2).setForeground(Color.RED);
         }
         if (allPayMoney >= 700) {
-            highQualityCoffeePriceLabel.setForeground(Color.GREEN);
+            DRINK_PRICE_LABEL.get(3).setForeground(Color.GREEN);
         } else {
-            highQualityCoffeePriceLabel.setForeground(Color.RED);
+            DRINK_PRICE_LABEL.get(3).setForeground(Color.RED);
         }
         if (allPayMoney >= 750) {
-            sodaPriceLabel.setForeground(Color.GREEN);
+            DRINK_PRICE_LABEL.get(4).setForeground(Color.GREEN);
         } else {
-            sodaPriceLabel.setForeground(Color.RED);
+            DRINK_PRICE_LABEL.get(4).setForeground(Color.RED);
         }
         if (allPayMoney >= 800) {
-            specialDrinkPriceLabel.setForeground(Color.GREEN);
+            DRINK_PRICE_LABEL.get(5).setForeground(Color.GREEN);
         } else {
-            specialDrinkPriceLabel.setForeground(Color.RED);
+            DRINK_PRICE_LABEL.get(5).setForeground(Color.RED);
         }
     }
 }

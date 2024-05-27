@@ -1,59 +1,26 @@
 package View;
 
-import message.MessageTexts;
+import View.button.ButtonService;
+import View.field.FieldService;
+import View.frame.FrameService;
+import View.label.LabelService;
 import socket.SocketDto;
 
-import javax.swing.*;
-import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-
-import static View.VendingMachineView.password;
-import static View.VendingMachineView.vendingMachineFrame;
+import static View.frame.FrameService.adminLoginFrame;
 
 public class AdminLoginView {
 
-    private static JFrame adminLoginFrame;
-    private static JPasswordField passwordField;
+    private FrameService frameService = new FrameService();
+    private LabelService labelService = new LabelService();
+    private FieldService fieldService = new FieldService();
+    private ButtonService buttonService = new ButtonService();
 
     public AdminLoginView(SocketDto socketDto) {
 
-        // 프레임
-        adminLoginFrame = new JFrame("관리자 메뉴 로그인");
-        adminLoginFrame.setBounds(560,200,300,300);
-        adminLoginFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        adminLoginFrame.getContentPane().setLayout(new FlowLayout(FlowLayout.CENTER, 30, 10));
-        adminLoginFrame.getContentPane().setBackground(new Color(255, 255, 255));
-        adminLoginFrame.setLocationRelativeTo(null);
-
-        JLabel passwordLabel = new JLabel("PW", SwingConstants.CENTER);
-        Font font = passwordLabel.getFont();
-        passwordLabel.setFont(font.deriveFont(Font.PLAIN, 20));
-        passwordLabel.setPreferredSize(new Dimension(100, 50));
-        passwordLabel.setForeground(Color.RED); // 글자 색상 설정
-        adminLoginFrame.getContentPane().add(passwordLabel);
-
-        passwordField = new JPasswordField(0);
-        passwordField.setFont(new Font("굴림", Font.BOLD, 20));
-        adminLoginFrame.getContentPane().add(passwordField);
-        passwordField.setColumns(10);
-
-        JButton loginButton = new JButton("Login");
-        loginButton.setPreferredSize(new Dimension(100, 100));
-        loginButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                if (passwordField.getText().equals(password.getPassword())) {
-                    vendingMachineFrame.setVisible(false);
-                    adminLoginFrame.setVisible(false);
-                    AdminPageView.adminPageView(socketDto);
-                } else {
-                    JOptionPane.showMessageDialog(adminLoginFrame, MessageTexts.PASSWORD_ERROR.getText());
-                }
-
-            }
-        });
-        adminLoginFrame.getContentPane().add(loginButton);
+        frameService.addAdminLoginFrame();  // 프레임 생성
+        labelService.addPWLabel();  // PW Label 생성
+        fieldService.addPasswordField();    // PW Field 생성
+        buttonService.addLoginButton(socketDto);    // Login 버튼 생성
 
         adminLoginFrame.setVisible(true);
     }

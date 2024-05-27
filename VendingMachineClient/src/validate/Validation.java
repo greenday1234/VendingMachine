@@ -4,6 +4,8 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import static View.VendingMachineView.*;
+import static util.Util.COIN_VALUES;
+import static util.Util.DRINK_LIST;
 
 public class Validation {
 
@@ -95,32 +97,32 @@ public class Validation {
         Boolean result = true;
         switch (text) {
             case "water":
-                if (quantityList.get(0) <= 0) {
+                if (DRINK_LIST.get(0).getQuantity() <= 0) {
                     result = false;
                 }
                 break;
             case "coffee":
-                if (quantityList.get(1) <= 0) {
+                if (DRINK_LIST.get(1).getQuantity() <= 0) {
                     result = false;
                 }
                 break;
             case "sportsDrink":
-                if (quantityList.get(2) <= 0) {
+                if (DRINK_LIST.get(2).getQuantity() <= 0) {
                     result = false;
                 }
                 break;
             case "highQualityCoffee":
-                if (quantityList.get(3) <= 0) {
+                if (DRINK_LIST.get(3).getQuantity() <= 0) {
                     result = false;
                 }
                 break;
             case "soda":
-                if (quantityList.get(4) <= 0) {
+                if (DRINK_LIST.get(4).getQuantity() <= 0) {
                     result = false;
                 }
                 break;
             case "specialDrink":
-                if (quantityList.get(5) <= 0) {
+                if (DRINK_LIST.get(5).getQuantity() <= 0) {
                     result = false;
                 }
                 break;
