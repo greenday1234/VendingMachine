@@ -3,6 +3,7 @@ package util;
 import domain.drink.*;
 import message.ExceptionTexts;
 
+import javax.swing.*;
 import java.awt.*;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -16,6 +17,8 @@ public class Util {
     public static final List<String> DRINK = new ArrayList<>(List.of("water", "coffee", "sportsDrink", "highQualityCoffee", "soda", "specialDrink"));
     public static List<Drink> DRINK_LIST = new ArrayList<>();
     public static final List<Integer> COIN_VALUES = new ArrayList<>(List.of(10, 50, 100, 500, 1000));
+    public static final int[] prices = {450, 500, 550, 700, 750, 800};
+
 
     public static void initProcess() throws IOException {
         quantityListInit(); // 재고 수량 초기화
@@ -79,35 +82,60 @@ public class Util {
     }
 
     public static void payMoneyCheck() {
-        if (allPayMoney >= 450) {
-            DRINK_PRICE_LABEL.get(0).setForeground(Color.GREEN);
-        } else {
-            DRINK_PRICE_LABEL.get(0).setForeground(Color.RED);
+
+        for (int i = 0; i < prices.length; i++) {
+            if (allPayMoney >= prices[i]) {
+                DRINK_PRICE_LABEL.get(i).setForeground(Color.GREEN);
+            } else {
+                DRINK_PRICE_LABEL.get(i).setForeground(Color.RED);
+            }
         }
-        if (allPayMoney >= 500) {
-            DRINK_PRICE_LABEL.get(1).setForeground(Color.GREEN);
-        } else {
-            DRINK_PRICE_LABEL.get(1).setForeground(Color.RED);
+    }
+
+    public static void check(int index, JLabel priceLabel, JTextField nameTextField, JTextField priceTextField) {
+        for (int i = 0; i < DRINK.size(); i++) {
+            if (index == i) {
+                DRINK_LIST.get(i).setDrinkName(nameTextField.getText());    // 이름 변경
+                ADMIN_DRINK_NAME_LABEL.get(i).setText(DRINK_LIST.get(i).getDrinkName());
+                DRINK_LIST.get(i).setDrinkPrice(Integer.parseInt(priceTextField.getText()));    // 가격 변경
+                writer.println("price " + DRINK.get(i) + " " + DRINK_LIST.get(i).getDrinkPrice());  // 가격 서버에 전송
+                priceLabel.setText(DRINK_LIST.get(i).getDrinkPrice() + " 원");
+            }
         }
-        if (allPayMoney >= 550 ) {
-            DRINK_PRICE_LABEL.get(2).setForeground(Color.GREEN);
-        } else {
-            DRINK_PRICE_LABEL.get(2).setForeground(Color.RED);
+    }
+
+    public static ImageIcon getImageIcon(String text) {
+        ImageIcon icon = new ImageIcon("image/" + text + ".png");
+        Image img = icon.getImage();
+        Image newImg = img.getScaledInstance(70, 70, Image.SCALE_SMOOTH);
+        icon = new ImageIcon(newImg);
+        return icon;
+    }
+
+    public static int checkCollectMoney() {
+        int result = 0;
+        for (int i = 0; i < changeMoney.size(); i++) {
+            Integer money = changeMoney.get(i);
+            if (money > 5) {
+                int excess = money - 5;
+                result += COIN_VALUES.get(i) * excess;
+                changeMoney.set(i, 5);
+            }
         }
-        if (allPayMoney >= 700) {
-            DRINK_PRICE_LABEL.get(3).setForeground(Color.GREEN);
-        } else {
-            DRINK_PRICE_LABEL.get(3).setForeground(Color.RED);
+
+        return result;
+    }
+
+    public static void writeChangeMoney() {
+        writer.println("collectMoney ");
+        for (int i = 0; i < 5; i++) {
+            writer.println(changeMoney.get(i));
         }
-        if (allPayMoney >= 750) {
-            DRINK_PRICE_LABEL.get(4).setForeground(Color.GREEN);
-        } else {
-            DRINK_PRICE_LABEL.get(4).setForeground(Color.RED);
-        }
-        if (allPayMoney >= 800) {
-            DRINK_PRICE_LABEL.get(5).setForeground(Color.GREEN);
-        } else {
-            DRINK_PRICE_LABEL.get(5).setForeground(Color.RED);
+    }
+
+    public static void updateChangeMoneyLabel() {
+        for (int i = 0; i < 5; i++) {
+            CHANGE_MONEY_LABEL.get(i).setText(COIN_VALUES.get(i) + " 원" + changeMoney.get(i) + " 개");
         }
     }
 }

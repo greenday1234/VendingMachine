@@ -38,9 +38,7 @@ public class VendingMachineView {
     public VendingMachineView(SocketDto socketDto) throws IOException {
 
         socketConfig(socketDto);    // 소켓 및 reader, writer 설정
-
         initProcess();  // 설정 값 초기화
-
         drinkListInit();    // DRINK_LIST 초기화
 
         frameService.makeVendingMachineFrame();  // 자판기 프레임 생성
@@ -51,7 +49,7 @@ public class VendingMachineView {
         addPayMoneyButton();    // 입금 버튼 생성
         buttonService.addPayBackButton();   // 환급 버튼 생성
         labelService.addMoneyLabel();   // 입금 금액 label
-        buttonService.addAdminButton(socketDto);    // 관리자 버튼 생성
+        buttonService.addAdminButton();    // 관리자 버튼 생성
         buttonService.disConnectButton();   // 자판기 종료 버튼 생성
 
         vendingMachineFrame.setVisible(true);

@@ -2,10 +2,7 @@ import View.VendingMachineView;
 import socket.MySocket;
 import socket.SocketDto;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.PrintWriter;
-import java.net.Socket;
 
 public class MyClient {
 

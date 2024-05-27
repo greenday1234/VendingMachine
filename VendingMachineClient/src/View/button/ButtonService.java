@@ -1,6 +1,7 @@
 package View.button;
 
 import View.AdminLoginView;
+import View.AdminPWChangeView;
 import View.AdminPageView;
 import View.label.LabelService;
 import message.MessageTexts;
@@ -12,10 +13,11 @@ import javax.swing.*;
 import java.awt.*;
 import java.io.IOException;
 
+import static View.AdminPWChangeView.passwordChangeTextField;
+import static View.AdminPWChangeView.passwordTextField;
 import static View.VendingMachineView.*;
 import static View.field.FieldService.passwordField;
-import static View.frame.FrameService.adminLoginFrame;
-import static View.frame.FrameService.vendingMachineFrame;
+import static View.frame.FrameService.*;
 import static View.label.LabelService.payMoneyLabel;
 import static util.Util.*;
 
@@ -114,12 +116,12 @@ public class ButtonService {
         vendingMachineFrame.getContentPane().add(button);
     }
 
-    public void addAdminButton(SocketDto socketDto) {
+    public void addAdminButton() {
         JButton button = new JButton("관리자 메뉴");
         button.setPreferredSize(new Dimension(100, 50));
 
         button.addActionListener(e -> {
-            AdminLoginView.adminLoginView(socketDto);
+            AdminLoginView.adminLoginView();
         });
         vendingMachineFrame.getContentPane().add(button);
     }
@@ -135,7 +137,7 @@ public class ButtonService {
         vendingMachineFrame.add(button);
     }
 
-    public void addLoginButton(SocketDto socketDto) {
+    public void addLoginButton() {
         JButton loginButton = new JButton("Login");
         loginButton.setPreferredSize(new Dimension(100, 50));
 
@@ -143,11 +145,78 @@ public class ButtonService {
             if (passwordField.getText().equals(password.getPassword())) {
                 vendingMachineFrame.setVisible(false);
                 adminLoginFrame.setVisible(false);
-                AdminPageView.adminPageView(socketDto);
+                AdminPageView.adminPageView();
             } else {
                 JOptionPane.showMessageDialog(adminLoginFrame, MessageTexts.PASSWORD_ERROR.getText());
             }
         });
         adminLoginFrame.getContentPane().add(loginButton);
+    }
+
+    public void addBackButton(GridBagConstraints gbc, int row) {
+        JButton button = new JButton("창 닫기");
+        button.setPreferredSize(new Dimension(50, 40));
+        gbc.gridy = row;
+        gbc.anchor = GridBagConstraints.WEST;
+
+        button.addActionListener(e -> {
+            adminPageFrame.setVisible(false);
+            vendingMachineFrame.setVisible(true);
+        });
+        adminPageFrame.add(button, gbc);
+    }
+
+    public void addCollectButton(GridBagConstraints gbc, ImageIcon icon) {
+        JButton button = new JButton(icon);
+        gbc.gridx = 1;
+        button.addActionListener(e -> {
+            int collectMoney = checkCollectMoney();
+            writeChangeMoney();
+            updateChangeMoneyLabel();
+            JOptionPane.showMessageDialog(adminPageFrame, collectMoney + MessageTexts.COLLECTMONEY.getText());
+        });
+        adminPageFrame.add(button, gbc);
+    }
+
+    public void addPWChangeButton(GridBagConstraints gbc, int row) {
+        JButton button = new JButton("관리자 비밀번호 변경");
+        gbc.gridx = 2;
+        gbc.gridy = row;
+        button.addActionListener(e -> {
+            AdminPWChangeView.adminPWChangeView();
+        });
+        adminPageFrame.add(button, gbc);
+    }
+
+    public void addPasswordChangeButton(GridBagConstraints gbc, int row) {
+        JButton button = new JButton("변경하기");
+        button.setPreferredSize(new Dimension(100, 50));
+        gbc.gridy = row;
+        button.addActionListener(e -> {
+            if (passwordTextField.getText().equals(password.getPassword())) {
+                if (!Validation.validPW(passwordChangeTextField.getText())) {
+                    JOptionPane.showMessageDialog(adminPWChangeFrame, MessageTexts.FAIL_CHANGE_PW.getText());
+                    return;
+                }
+                password.updatePassword(passwordChangeTextField.getText());
+                writer.println("password " + password.getPassword());
+                JOptionPane.showMessageDialog(adminPWChangeFrame, MessageTexts.CHANGE_PW.getText());
+                adminPWChangeFrame.setVisible(false);
+            } else {
+                JOptionPane.showMessageDialog(adminPWChangeFrame, MessageTexts.FAIL_SAME_PW.getText());
+            }
+        });
+        adminPWChangeFrame.add(button, gbc);
+    }
+
+    public void addAdminBackButton(GridBagConstraints gbc, int row) {
+        JButton button = new JButton("창 닫기");
+        button.setPreferredSize(new Dimension(50, 40));
+        gbc.gridy = row;
+        gbc.anchor = GridBagConstraints.WEST;
+        button.addActionListener(e -> {
+            adminPWChangeFrame.setVisible(false);
+        });
+        adminPWChangeFrame.add(button, gbc);
     }
 }
