@@ -32,19 +32,19 @@ public class VendingMachineThread implements Runnable {
     public static FileWriter monthlyFileWriter;
     public static FileReader monthlyFileReader;
 
-    public static VendingMachine vendingMachine;
     public static Password password;
+    public static VendingMachine vendingMachine;
 
     // 일별 판매 금액 데이터 생성
     public static Map<String, Integer> dailySales = new HashMap<>();
     // 월별 판매 금액 데이터 생성
     public static Map<String, Integer> monthlySales = new HashMap<>();
 
-    public VendingMachineThread(Socket socket, int PORT) throws IOException {
+    public VendingMachineThread(Socket socket, int PORT, VendingMachine vendingMachine) throws IOException {
         this.socket = socket;
         this.PORT = PORT;
-        vendingMachine = new VendingMachine();
         password = new Password("@1234567");
+        this.vendingMachine = vendingMachine;
     }
 
     public void run() {
