@@ -28,6 +28,9 @@ public class AdminPageView {
 
         buttonService.addBackButton(gbc, 0);    // 뒤로가기 버튼 생성
         addChangeMoneyLabel(gbc);   // 남은 화폐 개수 label
+        /** NOTE
+         * 필드 크기 변경!!
+         */
         addChangeMenu(gbc); // 음료 이름 및 가격 변경
         addDailySales(gbc, 14); // 일별 매출 label
         addMonthlySales(gbc, 15);   // 월별 매출 label
