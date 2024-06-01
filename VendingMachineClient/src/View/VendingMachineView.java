@@ -41,9 +41,6 @@ public class VendingMachineView {
         initProcess();  // 설정 값 초기화
         drinkListInit();    // DRINK_LIST 초기화
 
-        /** NOTE
-         * 프레임 크기 변경!!
-         */
         frameService.makeVendingMachineFrame();  // 자판기 프레임 생성
         makeDrinkButton();  // 음료 버튼 생성
         addDrinkNameLabel();    // 음료 이름 label

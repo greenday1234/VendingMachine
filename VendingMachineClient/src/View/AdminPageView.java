@@ -28,9 +28,6 @@ public class AdminPageView {
 
         buttonService.addBackButton(gbc, 0);    // 뒤로가기 버튼 생성
         addChangeMoneyLabel(gbc);   // 남은 화폐 개수 label
-        /** NOTE
-         * 필드 크기 변경!!
-         */
         addChangeMenu(gbc); // 음료 이름 및 가격 변경
         addDailySales(gbc, 14); // 일별 매출 label
         addMonthlySales(gbc, 15);   // 월별 매출 label
@@ -110,17 +107,25 @@ public class AdminPageView {
         gbc.gridy = row;
         adminPageFrame.add(nameLabel, gbc);
 
-        JTextField nameTextField = new JTextField(nameLabel.getText());
+        JTextField nameTextField = new JTextField(nameLabel.getText(), 20);
+        nameTextField.setPreferredSize(new Dimension(50, 30));
+        gbc.fill = GridBagConstraints.HORIZONTAL;
         gbc.gridx = 1;
         adminPageFrame.add(nameTextField, gbc);
+
+        setGbcConfig(gbc);
 
         JLabel priceLabel = new JLabel(DRINK_LIST.get(index).getDrinkPrice() + " 원");
         gbc.gridx = 2;
         adminPageFrame.add(priceLabel, gbc);
 
-        JTextField priceTextField = new JTextField(Integer.toString(DRINK_LIST.get(index).getDrinkPrice()));
+        JTextField priceTextField = new JTextField(Integer.toString(DRINK_LIST.get(index).getDrinkPrice()), 20);
+        priceTextField.setPreferredSize(new Dimension(50, 30));
+        gbc.fill = GridBagConstraints.HORIZONTAL;
         gbc.gridx = 3;
         adminPageFrame.add(priceTextField, gbc);
+
+        setGbcConfig(gbc);
 
         JButton button = new JButton("변경");
         gbc.gridx = 4;
@@ -128,6 +133,11 @@ public class AdminPageView {
             check(index, priceLabel, nameTextField, priceTextField);
         });
         adminPageFrame.add(button, gbc);
+    }
+
+    private void setGbcConfig(GridBagConstraints gbc) {
+        gbc.fill = GridBagConstraints.NONE;
+        gbc.weightx = 0.0;
     }
 
     public static void adminPageView() {
