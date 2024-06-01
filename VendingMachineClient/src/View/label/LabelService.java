@@ -47,7 +47,13 @@ public class LabelService {
     }
 
     public JLabel addQuantityLabel(int index) {
-        JLabel label = new JLabel(DRINK_LIST.get(index).getQuantity() + " 개", SwingConstants.CENTER);
+        JLabel label;
+
+        if (DRINK_LIST.get(index).getQuantity() != 0) {
+            label = new JLabel(DRINK_LIST.get(index).getQuantity() + " 개", SwingConstants.CENTER);
+        } else {
+            label = new JLabel("품절", SwingConstants.CENTER);
+        }
         Font font = label.getFont();
         label.setFont(font.deriveFont(Font.PLAIN, 20));
         label.setPreferredSize(new Dimension(100, 50));
