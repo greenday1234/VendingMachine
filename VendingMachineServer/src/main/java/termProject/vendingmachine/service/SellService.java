@@ -1,5 +1,6 @@
 package termProject.vendingmachine.service;
 
+import lombok.extern.slf4j.Slf4j;
 import termProject.vendingmachine.domain.drink.Drink;
 
 import java.io.IOException;
@@ -11,6 +12,7 @@ import static termProject.vendingmachine.util.Util.DRINK;
 import static termProject.vendingmachine.util.Write.writeQuantityList;
 import static termProject.vendingmachine.util.Write.writeStock;
 
+@Slf4j
 public class SellService {
 
     public static void sellDrink(String clicked, int PORT) throws IOException {
@@ -24,6 +26,8 @@ public class SellService {
                 writeRemainMoney(drink);    // 입력 금액 변경 및 반환
 
                 writeSales(PORT);   // 판매 금액 반환
+
+                checkQuantity(drink, DRINK.get(i));    // 재고 품절 확인
             }
         }
     }
@@ -48,5 +52,11 @@ public class SellService {
     private static void writeFileSales(Drink drink, int PORT) throws IOException {
         addDailySale(drink.getPrice(), PORT);   // 전체 판매 금액 변경 일별
         calculateMonthlySales(PORT);    // 전체 판매 금액 월별
+    }
+
+    private static void checkQuantity(Drink drink, String drinkName) {
+        if (drink.getQuantity() == 0) {
+            log.info(drinkName + " 가 품절되었습니다. 재고를 보충해주세요.");
+        }
     }
 }

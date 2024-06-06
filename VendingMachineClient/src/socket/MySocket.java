@@ -5,7 +5,7 @@ import java.net.Socket;
 
 public class MySocket {
 
-    private final String SERVER_ADDRESS = "192.0.0.2";
+    private final String SERVER_ADDRESS = "172.30.1.24";
     private final int PORT = 8000;
 
     public SocketDto connectSocket() {

@@ -74,8 +74,12 @@ public class LabelService {
     public void checkTextLabel(String text) {
         for (int i = 0; i < DRINK.size(); i++) {
             if (text.equals(DRINK.get(i))) {
-                DRINK_QUANTITY_LABEL.get(i).setText(DRINK_LIST.get(i).getQuantity() + " 개");
                 JOptionPane.showMessageDialog(vendingMachineFrame, DRINK_LIST.get(i).getDrinkName() + " 을 구매하셨습니다.");
+                if (DRINK_LIST.get(i).getQuantity() == 0) {
+                    DRINK_QUANTITY_LABEL.get(i).setText("품절");
+                    return;
+                }
+                DRINK_QUANTITY_LABEL.get(i).setText(DRINK_LIST.get(i).getQuantity() + " 개");
                 return;
             }
         }

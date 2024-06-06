@@ -21,7 +21,6 @@ import static termProject.vendingmachine.util.Write.*;
 @Slf4j
 public class VendingMachineThread implements Runnable {
 
-    public int PORT;
     public static Socket socket;
     public static BufferedReader reader;
     public static PrintWriter writer;
@@ -34,11 +33,12 @@ public class VendingMachineThread implements Runnable {
 
     public static Password password;
     public static VendingMachine vendingMachine;
-
     // 일별 판매 금액 데이터 생성
     public static Map<String, Integer> dailySales = new HashMap<>();
     // 월별 판매 금액 데이터 생성
     public static Map<String, Integer> monthlySales = new HashMap<>();
+
+    public int PORT;
 
     public VendingMachineThread(Socket socket, int PORT, VendingMachine vendingMachine) throws IOException {
         this.socket = socket;

@@ -24,7 +24,7 @@ public class File {
         dailySales.put(date, result);
 
         for (Map.Entry<String, Integer> entry : dailySales.entrySet()) {
-            if (updateSale(entry.getKey(), result, "./sales" + "/" + PORT + "/dailySales.txt")) {
+            if (updateSale(entry.getKey(), result, "./sales" + "/" + PORT + "/daily" + "/dailySales.txt")) {
                 dailyFileWriter.write(entry.getKey() + ":" + entry.getValue() + "\n");
             }
         }
@@ -42,7 +42,7 @@ public class File {
         }
 
         for (Map.Entry<String, Integer> entry : monthlySales.entrySet()) {
-            if (updateSale(entry.getKey(), entry.getValue(), "./sales" + "/" + PORT + "/monthlySales.txt")) {
+            if (updateSale(entry.getKey(), entry.getValue(), "./sales" + "/" + PORT + "/monthly" + "/monthlySales.txt")) {
                 monthlyFileWriter.write(entry.getKey() + ":" + entry.getValue() + "\n");
             }
         }
@@ -52,8 +52,7 @@ public class File {
     public static void readAndWriteDailyFile(int PORT) throws IOException {
         dailyReader.close();
 
-        dailyReader = new BufferedReader(new FileReader("./sales" + "/" + PORT + "/dailySales.txt"));
-
+        dailyReader = new BufferedReader(new FileReader("./sales" + "/" + PORT + "/daily" + "/dailySales.txt"));
         String line;
         dailyReader.mark(0);
         while ((line = dailyReader.readLine()) != null) {
@@ -68,7 +67,7 @@ public class File {
     public static void readAndWriteMonthlyFile(int PORT) throws IOException {
         monthlyReader.close();
 
-        monthlyReader = new BufferedReader(new FileReader("./sales" + "/" + PORT + "/monthlySales.txt"));
+        monthlyReader = new BufferedReader(new FileReader("./sales" + "/" + PORT + "/monthly" + "/monthlySales.txt"));
 
         String line;
         monthlyReader.mark(0);
