@@ -54,18 +54,18 @@ public class VendingMachineThread implements Runnable {
 
                 while (true) {
                     String[] clicked = checkClicked();    // 클라이언트에서의 메시지 전송 확인
-                    if (clicked[0].equals("drink")) {
-                        sellDrink(clicked[1], PORT);   // 음료 결제
-                    } else if (clicked[0].equals("money")) {
-                        moneyDeposit(clicked[1]);    // 화폐 입금
+                    if (clicked[0].equals("drink")) {   // 음료 결제
+                        sellDrink(clicked[1], PORT);
+                    } else if (clicked[0].equals("money")) {    // 화폐 입금
+                        moneyDeposit(clicked[1]);
                     } else if (clicked[0].equals("return")) { // 금액 반환
                         returnRemainMoney();
-                    } else if (clicked[0].equals("price")) {
-                        changePrice(clicked); // 가격 변경
-                    } else if (clicked[0].equals("collectMoney")) {
-                        readChangeMoney();  // 수금하기
-                    } else if (clicked[0].equals("password")) {
-                        password.updatePassword(clicked[1]);  // 비밀번호 변경
+                    } else if (clicked[0].equals("price")) { // 가격 변경
+                        changePrice(clicked);
+                    } else if (clicked[0].equals("collectMoney")) {  // 수금하기
+                        readChangeMoney();
+                    } else if (clicked[0].equals("password")) {  // 비밀번호 변경
+                        password.updatePassword(clicked[1]);
                     } else {    // exit
                         break;
                     }

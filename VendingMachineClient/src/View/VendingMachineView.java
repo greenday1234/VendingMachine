@@ -76,7 +76,7 @@ public class VendingMachineView {
     }
 
     private void addDrinkNameLabel() {
-        for (int i = 0; i < DRINK_NAME_LABEL.size(); i++) {
+        for (int i = 0; i < DRINK_LIST.size(); i++) {
             JLabel label = labelService.addNameLabel(DRINK_LIST.get(i).getDrinkName());
             DRINK_NAME_LABEL.add(label);
         }
