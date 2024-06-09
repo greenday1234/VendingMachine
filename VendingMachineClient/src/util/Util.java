@@ -97,6 +97,7 @@ public class Util {
             if (index == i) {
                 DRINK_LIST.get(i).setDrinkName(nameTextField.getText());    // 이름 변경
                 ADMIN_DRINK_NAME_LABEL.get(i).setText(DRINK_LIST.get(i).getDrinkName());
+                DRINK_NAME_LABEL.get(i).setText(DRINK_LIST.get(i).getDrinkName());
                 DRINK_LIST.get(i).setDrinkPrice(Integer.parseInt(priceTextField.getText()));    // 가격 변경
                 writer.println("price " + DRINK.get(i) + " " + DRINK_LIST.get(i).getDrinkPrice());  // 가격 서버에 전송
                 priceLabel.setText(DRINK_LIST.get(i).getDrinkPrice() + " 원");
