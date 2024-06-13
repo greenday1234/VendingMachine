@@ -82,5 +82,6 @@ public class VendingMachineThread implements Runnable {
         writeChangeMoney();   // 초기 거스름돈 수량 반환
         writeStockDate();     // 초기 재고 소진 일자 반환
         writePassword();  // 비밀번호 반환
+        writePrice();   // 초기 가격 반환
     }
 }

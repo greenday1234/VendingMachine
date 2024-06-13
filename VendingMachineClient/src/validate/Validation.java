@@ -43,7 +43,7 @@ public class Validation {
     public static Boolean validChangeMoney(String text) {
         for (int i = 0; i < DRINK.size(); i++) {
             if (text.equals(DRINK.get(i))) {
-                if (!validRemainMoney(allPayMoney - prices[i])) {
+                if (!validRemainMoney(allPayMoney - prices.get(i))) {
                     return false;
                 }
             }
@@ -80,7 +80,7 @@ public class Validation {
     public static Boolean validMoney(String money) {
         for (int i = 0; i < DRINK.size(); i++) {
             if (money.equals(DRINK.get(i))) {
-                if ((allPayMoney - prices[i]) < 0) {
+                if ((allPayMoney - prices.get(i)) < 0) {
                     return false;
                 }
             }

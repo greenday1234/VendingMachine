@@ -2,11 +2,17 @@ package termProject.vendingmachine.util;
 
 import static termProject.vendingmachine.VendingMachineThread.password;
 import static termProject.vendingmachine.VendingMachineThread.writer;
-import static termProject.vendingmachine.domain.VendingMachine.changeMoney;
-import static termProject.vendingmachine.domain.VendingMachine.quantityList;
+import static termProject.vendingmachine.domain.VendingMachine.*;
+import static termProject.vendingmachine.util.Util.DRINK;
 import static termProject.vendingmachine.util.Util.updateDate;
 
 public class Write {
+
+    public static void writePrice() {
+        for (int i = 0; i < DRINK.size(); i++) {
+            writer.println(DRINK_LIST.get(i).getPrice());
+        }
+    }
 
     public static void writePassword() {
         writer.println(password.getPassword());

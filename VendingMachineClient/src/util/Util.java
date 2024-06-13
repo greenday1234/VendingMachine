@@ -17,7 +17,7 @@ public class Util {
     public static final List<String> DRINK = new ArrayList<>(List.of("water", "coffee", "sportsDrink", "highQualityCoffee", "soda", "specialDrink"));
     public static List<Drink> DRINK_LIST = new ArrayList<>();
     public static final List<Integer> COIN_VALUES = new ArrayList<>(List.of(10, 50, 100, 500, 1000));
-    public static final int[] prices = {450, 500, 550, 700, 750, 800};
+    public static final List<Integer> prices = new ArrayList<>();
 
 
     public static void initProcess() throws IOException {
@@ -25,15 +25,24 @@ public class Util {
         changeMoneyInit();  // 거스름돈 수량 초기화
         stockDateInit();    // 재고 소진 일자 초기화
         passwordInit(); // 비밀번호 초기화
+        pricesInit();   // 가격 초기화
     }
 
     public static void drinkListInit() {
-        DRINK_LIST.add(new Water("물", 450, quantityList.get(0)));
-        DRINK_LIST.add(new Coffee("커피", 500, quantityList.get(1)));
-        DRINK_LIST.add(new SportsDrink("이온음료", 550, quantityList.get(2)));
-        DRINK_LIST.add(new HighQualityCoffee("고급 커피", 700, quantityList.get(3)));
-        DRINK_LIST.add(new Soda("탄산음료", 750, quantityList.get(4)));
-        DRINK_LIST.add(new SpecialDrink("특별음료", 800, quantityList.get(5)));
+        DRINK_LIST.add(new Water("물", prices.get(0), quantityList.get(0)));
+        DRINK_LIST.add(new Coffee("커피", prices.get(1), quantityList.get(1)));
+        DRINK_LIST.add(new SportsDrink("이온음료", prices.get(2), quantityList.get(2)));
+        DRINK_LIST.add(new HighQualityCoffee("고급 커피", prices.get(3), quantityList.get(3)));
+        DRINK_LIST.add(new Soda("탄산음료", prices.get(4), quantityList.get(4)));
+        DRINK_LIST.add(new SpecialDrink("특별음료", prices.get(5), quantityList.get(5)));
+    }
+
+    public static void pricesInit() throws IOException {
+        for (int i = 0; i < 6; i++) {
+            String str = reader.readLine();
+            prices.add(Integer.parseInt(str));
+        }
+
     }
 
     public static void passwordInit() throws IOException {
@@ -83,8 +92,8 @@ public class Util {
 
     public static void payMoneyCheck() {
 
-        for (int i = 0; i < prices.length; i++) {
-            if (allPayMoney >= prices[i]) {
+        for (int i = 0; i < prices.size(); i++) {
+            if (allPayMoney >= prices.get(i)) {
                 DRINK_PRICE_LABEL.get(i).setForeground(Color.GREEN);
             } else {
                 DRINK_PRICE_LABEL.get(i).setForeground(Color.RED);
@@ -99,6 +108,7 @@ public class Util {
                 ADMIN_DRINK_NAME_LABEL.get(i).setText(DRINK_LIST.get(i).getDrinkName());
                 DRINK_NAME_LABEL.get(i).setText(DRINK_LIST.get(i).getDrinkName());
                 DRINK_LIST.get(i).setDrinkPrice(Integer.parseInt(priceTextField.getText()));    // 가격 변경
+                DRINK_PRICE_LABEL.get(i).setText(DRINK_LIST.get(i).getDrinkPrice() + " 원");
                 writer.println("price " + DRINK.get(i) + " " + DRINK_LIST.get(i).getDrinkPrice());  // 가격 서버에 전송
                 priceLabel.setText(DRINK_LIST.get(i).getDrinkPrice() + " 원");
             }
